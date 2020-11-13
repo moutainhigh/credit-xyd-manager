@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.winchampion.credit.business.dao.WechatProductDao">
+
+	<select id="get" resultType="com.winchampion.credit.business.vo.WechatProductVo">
+		SELECT
+	tb_wechat_product.id,
+	tb_wechat_product.credit_product_id as creditProductId,
+	tb_wechat_product.wechat_appid as wechatAppid,
+	tb_wechat_product.wechat_url as wechatUrl,
+	tb_wechat_product.update_date as updateDate,
+	tb_wechat_product.update_by as updateBy,
+	tb_product.product_no as productNo,
+	tb_product.product_name as productName,
+  	tb_product.is_Release as isRelease
+FROM
+	tb_wechat_product as tb_wechat_product
+	inner join tb_product as tb_product on tb_product.id = tb_wechat_product.credit_product_id
+	
+		 where tb_wechat_product.id = #{value}
+	</select>
+
+	<select id="list" resultType="com.winchampion.credit.business.vo.WechatProductVo">
+		SELECT
+	tb_wechat_product.id,
+	tb_wechat_product.credit_product_id as creditProductId,
+	tb_wechat_product.wechat_appid as wechatAppid,
+	tb_wechat_product.wechat_url as wechatUrl,
+	tb_wechat_product.update_date as updateDate,
+	tb_wechat_product.update_by as updateBy,
+	tb_product.product_no as productNo,
+	tb_product.product_name as productName,
+  	tb_product.is_Release as isRelease,
+	sys_user.name as  updateByName,
+   tb_ins.ins_name as insName
+FROM
+	tb_wechat_product as tb_wechat_product
+	LEFT JOIN sys_user as sys_user on sys_user.user_id = tb_wechat_product.update_by
+	inner join tb_product as tb_product on tb_product.id = tb_wechat_product.credit_product_id
+	LEFT JOIN tb_ins as tb_ins ON tb_ins.id = tb_product.fin_ent_id
+ <where>  
+ 	tb_wechat_product.del_flag = '0'
+  		  <if test="id != null and id != ''"> and tb_wechat_product.id = #{id} </if>
+  		  <if test="creditProductId != null and creditProductId != ''"> and tb_wechat_product.credit_product_id = #{creditProductId} </if>
+  		  <if test="wechatAppid != null and wechatAppid != ''"> and tb_wechat_product.wechat_appid = #{wechatAppid} </if>
+  		  <if test="wechatUrl != null and wechatUrl != ''"> and tb_wechat_product.wechat_url = #{wechatUrl} </if>
+  		  <if test="createDate != null and createDate != ''"> and tb_wechat_product.create_date = #{createDate} </if>
+  		  <if test="createBy != null and createBy != ''"> and tb_wechat_product.create_by = #{createBy} </if>
+  		  <if test="updateDate != null and updateDate != ''"> and tb_wechat_product.update_date = #{updateDate} </if>
+  		  <if test="updateBy != null and updateBy != ''"> and tb_wechat_product.update_by = #{updateBy} </if>
+  		  
+  		  <if test="productName != null and productName != ''"> and tb_product.product_name like concat('%',#{productName},'%')</if>
+  		  <if test="isRelease != null and isRelease != ''"> and tb_product.is_release = #{isRelease} </if>
+  		  <if test="insName != null and insName != ''"> and tb_ins.ins_name like concat('%',#{insName},'%') </if>
+  		  
+  		</where>
+       <!--  order by tb_product.sort asc -->
+       order by tb_wechat_product.update_date desc
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from tb_wechat_product
+		 <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="creditProductId != null and creditProductId != ''"> and credit_product_id = #{creditProductId} </if>
+		  		  <if test="wechatAppid != null and wechatAppid != ''"> and wechat_appid = #{wechatAppid} </if>
+		  		  <if test="wechatUrl != null and wechatUrl != ''"> and wechat_url = #{wechatUrl} </if>
+		  		  <if test="createDate != null and createDate != ''"> and create_date = #{createDate} </if>
+		  		  <if test="createBy != null and createBy != ''"> and create_by = #{createBy} </if>
+		  		  <if test="updateDate != null and updateDate != ''"> and update_date = #{updateDate} </if>
+		  		  <if test="updateBy != null and updateBy != ''"> and update_by = #{updateBy} </if>
+		  		  <if test="delFlag != null and delFlag != ''"> and del_flag = #{delFlag} </if>
+		  		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.winchampion.credit.business.domain.WechatProductDO">
+		insert into tb_wechat_product
+		(
+			`id`, 
+			`credit_product_id`, 
+			`wechat_appid`, 
+			`wechat_url`, 
+			`create_date`, 
+			`create_by`, 
+			`update_date`, 
+			`update_by`, 
+			`del_flag`
+		)
+		values
+		(
+			#{id}, 
+			#{creditProductId}, 
+			#{wechatAppid}, 
+			#{wechatUrl}, 
+			#{createDate}, 
+			#{createBy}, 
+			#{updateDate}, 
+			#{updateBy}, 
+			#{delFlag}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.winchampion.credit.business.domain.WechatProductDO">
+		update tb_wechat_product 
+		<set>
+			<if test="creditProductId != null">`credit_product_id` = #{creditProductId}, </if>
+			<if test="wechatAppid != null">`wechat_appid` = #{wechatAppid}, </if>
+			<if test="wechatUrl != null">`wechat_url` = #{wechatUrl}, </if>
+			<if test="createDate != null">`create_date` = #{createDate}, </if>
+			<if test="createBy != null">`create_by` = #{createBy}, </if>
+			<if test="updateDate != null">`update_date` = #{updateDate}, </if>
+			<if test="updateBy != null">`update_by` = #{updateBy}, </if>
+			<if test="delFlag != null">`del_flag` = #{delFlag}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="remove">
+		delete from tb_wechat_product where id = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from tb_wechat_product where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+	
+	<insert id="batchInsert">
+		insert into tb_wechat_product
+		(
+			`id`, 
+			`credit_product_id`, 
+			`wechat_appid`, 
+			`wechat_url`, 
+			`create_date`, 
+			`create_by`, 
+			`update_date`, 
+			`update_by`, 
+			`del_flag`
+		)
+		values
+		<foreach item="item" collection="list" separator="," >
+			(
+			#{item.id}, 
+			#{item.creditProductId}, 
+			#{item.wechatAppid}, 
+			#{item.wechatUrl}, 
+			#{item.createDate}, 
+			#{item.createBy}, 
+			#{item.updateDate}, 
+			#{item.updateBy}, 
+			#{item.delFlag}
+		)
+		</foreach>
+	</insert>
+</mapper>

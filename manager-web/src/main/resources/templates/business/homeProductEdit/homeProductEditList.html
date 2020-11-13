@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:shiro="http://www.w3.org/1999/xhtml">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content ">
+		<div class="col-sm-12">
+<!--			<div class="text-center" th:switch="${productType}">-->
+<!--				<h3 th:case="'1'">首页热门贷款产品</h3>-->
+<!--				<h3 th:case="'2'">首页企业贷款产品</h3>-->
+<!--				<h3 th:case="'3'">首页个人贷款产品</h3>-->
+<!--			</div>-->
+			<div class="ibox">
+				<div class="ibox-body">
+					<div class="fixed-table-toolbar">
+						<div class="columns pull-left">
+							<button shiro:hasPermission="business:homeProductEdit:edit" type="button"
+								class="btn  btn-primary" onclick="moveIn()">
+								<i class="fa fa-plus" aria-hidden="true"></i>移入产品
+							</button>
+						</div>
+					</div>
+					<input id="productType" th:value="${productType}" type="hidden">
+					<table id="exampleTable" data-mobile-responsive="true">
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+	</div>
+	<div th:include="include :: footer"></div>
+	<script type="text/javascript"
+		src="/js/appjs/business/homeProductEdit/homeProductEditList.js?v=20200314005"></script>
+</body>
+</html>

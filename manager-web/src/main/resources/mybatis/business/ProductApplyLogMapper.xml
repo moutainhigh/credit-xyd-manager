@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.winchampion.credit.business.dao.ProductApplyLogDao">
+
+	<select id="get" resultType="com.winchampion.credit.business.domain.ProductApplyLogDO">
+		select l.`ID`,l.`product_id`,l.`customer_id`,l.`apply_odd`,l.`application_type`,l.`apply_time`,l.`apply_result`,l.`company_message`,
+		c.customer_name AS 'customerName',c.customer_phone AS 'customerPhone',
+		p.product_name AS 'productName',
+		i.ins_name AS 'insName'
+		 from tb_product_apply_log l
+		 LEFT JOIN tb_customer c on c.ID = l.customer_id
+		 LEFT JOIN tb_product p on p.id = l.product_id
+		 LEFT JOIN tb_ins i ON i.id = p.fin_ent_id
+		  where l.ID = #{value}
+	</select>
+
+	<select id="list" resultType="com.winchampion.credit.business.domain.ProductApplyLogDO">
+		select l.`ID`,l.`product_id`,l.`customer_id`,l.`apply_odd`,l.`application_type`,l.`apply_time`,l.`apply_result`,l.`company_message`,
+		c.customer_name AS 'customerName',c.customer_phone AS 'customerPhone',
+		p.product_name AS 'productName',
+		i.ins_name AS 'insName'
+		 from tb_product_apply_log l
+		 LEFT JOIN tb_customer c on c.ID = l.customer_id
+		 LEFT JOIN tb_product p on p.id = l.product_id
+		 LEFT JOIN tb_ins i ON i.id = p.fin_ent_id
+        <where>  
+		  		  <if test="id != null and id != ''"> and l.ID = #{id} </if>
+		  		  <if test="productId != null and productId != ''"> and l.product_id = #{productId} </if>
+		  		  <if test="customerId != null and customerId != ''"> and l.customer_id = #{customerId} </if>
+		  		  <if test="applyOdd != null and applyOdd != ''"> and l.apply_odd = #{applyOdd} </if>
+		  		  <if test="applicationType != null and applicationType != ''"> and l.application_type = #{applicationType} </if>
+		  		  <if test="applyTime != null and applyTime != ''"> and l.apply_time = #{applyTime} </if>
+		  		  <if test="applyResult != null and applyResult != ''"> and l.apply_result = #{applyResult} </if>
+		  		  <if test="customerName != null and customerName != ''"> and c.customer_name = #{customerName} </if>
+		  		  <if test="customerPhone != null and customerPhone != ''"> and c.customer_phone = #{customerPhone} </if>
+		  		  <if test="productName != null and productName != ''"> and p.product_name = #{productName} </if>
+		  		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by l.apply_time desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from tb_product_apply_log l
+		 LEFT JOIN tb_customer c on c.ID = l.customer_id
+		 LEFT JOIN tb_product p on p.id = l.product_id
+		 LEFT JOIN tb_ins i ON i.id = p.fin_ent_id
+		 <where>  
+		  		  <if test="id != null and id != ''"> and l.ID = #{id} </if>
+		  		  <if test="productId != null and productId != ''"> and l.product_id = #{productId} </if>
+		  		  <if test="customerId != null and customerId != ''"> and l.customer_id = #{customerId} </if>
+		  		  <if test="applyOdd != null and applyOdd != ''"> and l.apply_odd = #{applyOdd} </if>
+		  		  <if test="applicationType != null and applicationType != ''"> and l.application_type = #{applicationType} </if>
+		  		  <if test="applyTime != null and applyTime != ''"> and l.apply_time = #{applyTime} </if>
+		  		  <if test="applyResult != null and applyResult != ''"> and l.apply_result = #{applyResult} </if>
+		  		  <if test="customerName != null and customerName != ''"> and c.customer_name = #{customerName} </if>
+		  		  <if test="customerPhone != null and customerPhone != ''"> and c.customer_phone = #{customerPhone} </if>
+		  		  <if test="productName != null and productName != ''"> and p.product_name = #{productName} </if>
+		  		</where>
+	</select>
+	
+	<select id="sinosureFinancingList" resultType="com.winchampion.credit.business.domain.ProductApplyLogDO">
+		select l.`ID`,l.`product_id`,l.`customer_id`,l.`apply_odd`,l.`application_type`,l.`apply_time`,l.`apply_result`,l.`company_message`,
+		c.customer_name AS 'customerName',c.customer_phone AS 'customerPhone',
+		p.product_name AS 'productName',i.ins_name AS 'insName',
+		s.name AS 'name',s.mobile_phone AS 'mobilePhone'
+		 from tb_product_apply_log l
+		 LEFT JOIN tb_customer c on c.ID = l.customer_id
+		 LEFT JOIN tb_sinosure_financing s on s.apply_odd = l.apply_odd
+		 LEFT JOIN tb_product p on p.id = l.product_id
+		 LEFT JOIN tb_ins i ON i.id = p.fin_ent_id
+        <where>  
+		  		  <if test="id != null and id != ''"> and l.ID = #{id} </if>
+		  		  <if test="productId != null and productId != ''"> and l.product_id = #{productId} </if>
+		  		  <if test="customerId != null and customerId != ''"> and l.customer_id = #{customerId} </if>
+		  		  <if test="applyOdd != null and applyOdd != ''"> and l.apply_odd = #{applyOdd} </if>
+		  		  <if test="applicationType != null and applicationType != ''"> and l.application_type = #{applicationType} </if>
+		  		  <if test="applyTime != null and applyTime != ''"> and l.apply_time = #{applyTime} </if>
+		  		  <if test="applyResult != null and applyResult != ''"> and l.apply_result = #{applyResult} </if>
+		  		  <if test="customerName != null and customerName != ''"> and c.customer_name = #{customerName} </if>
+		  		  <if test="customerPhone != null and customerPhone != ''"> and c.customer_phone = #{customerPhone} </if>
+		  		  <if test="productName != null and productName != ''"> and p.product_name = #{productName} </if>
+		  		  <if test="insName != null and insName != ''"> and i.ins_name = #{insName} </if>
+		  		  <if test="name != null and name != ''"> and s.name = #{name} </if>
+		  		  <if test="mobilePhone != null and mobilePhone != ''"> and s.mobile_phone = #{mobilePhone} </if>
+		  		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by l.apply_time desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+	<select id="sinosureFinancingCount" resultType="int">
+		select count(*) from tb_product_apply_log l
+			LEFT JOIN tb_customer c on c.ID = l.customer_id
+		 LEFT JOIN tb_sinosure_financing s on s.apply_odd = l.apply_odd
+		 LEFT JOIN tb_product p on p.id = l.product_id
+		 LEFT JOIN tb_ins i ON i.id = p.fin_ent_id
+		<where>  
+		  		  <if test="id != null and id != ''"> and l.ID = #{id} </if>
+		  		  <if test="productId != null and productId != ''"> and l.product_id = #{productId} </if>
+		  		  <if test="customerId != null and customerId != ''"> and l.customer_id = #{customerId} </if>
+		  		  <if test="applyOdd != null and applyOdd != ''"> and l.apply_odd = #{applyOdd} </if>
+		  		  <if test="applicationType != null and applicationType != ''"> and l.application_type = #{applicationType} </if>
+		  		  <if test="applyTime != null and applyTime != ''"> and l.apply_time = #{applyTime} </if>
+		  		  <if test="applyResult != null and applyResult != ''"> and l.apply_result = #{applyResult} </if>
+		  		  <if test="customerName != null and customerName != ''"> and c.customer_name = #{customerName} </if>
+		  		  <if test="customerPhone != null and customerPhone != ''"> and c.customer_phone = #{customerPhone} </if>
+		  		  <if test="productName != null and productName != ''"> and p.product_name = #{productName} </if>
+		  		  <if test="insName != null and insName != ''"> and i.ins_name = #{insName} </if>
+		  		  <if test="name != null and name != ''"> and s.name = #{name} </if>
+		  		  <if test="mobilePhone != null and mobilePhone != ''"> and s.mobile_phone = #{mobilePhone} </if>
+		  		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.winchampion.credit.business.domain.ProductApplyLogDO">
+		insert into tb_product_apply_log
+		(
+			`ID`, 
+			`product_id`, 
+			`customer_id`, 
+			`apply_odd`, 
+			`application_type`, 
+			`apply_time`, 
+			`apply_result`
+		)
+		values
+		(
+			#{id}, 
+			#{productId}, 
+			#{customerId}, 
+			#{applyOdd}, 
+			#{applicationType}, 
+			#{applyTime}, 
+			#{applyResult}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.winchampion.credit.business.domain.ProductApplyLogDO">
+		update tb_product_apply_log 
+		<set>
+			<if test="productId != null">`product_id` = #{productId}, </if>
+			<if test="customerId != null">`customer_id` = #{customerId}, </if>
+			<if test="applyOdd != null">`apply_odd` = #{applyOdd}, </if>
+			<if test="applicationType != null">`application_type` = #{applicationType}, </if>
+			<if test="applyTime != null">`apply_time` = #{applyTime}, </if>
+			<if test="applyResult != null">`apply_result` = #{applyResult}</if>
+		</set>
+		where ID = #{id}
+	</update>
+	
+	<delete id="remove">
+		delete from tb_product_apply_log where ID = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from tb_product_apply_log where ID in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+	<update id="updateApplyTimeout" parameterType="com.winchampion.credit.business.vo.ApplyTimeoutVo">
+		UPDATE tb_product_apply_log p SET p.apply_result = #{type1}
+		WHERE p.ID IN
+		(SELECT b.id FROM 
+		(
+		SELECT
+					l.ID
+				FROM
+					tb_product_apply_log l
+				WHERE
+					TIMESTAMPDIFF(HOUR, l.apply_time, now()) &gt; 24
+				AND l.apply_result = #{type2}
+		) b
+		)
+	</update>
+</mapper>

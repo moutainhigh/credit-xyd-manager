@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.winchampion.credit.business.dao.FrontApplyFlowLogDao">
+
+	<select id="get" resultType="com.winchampion.credit.business.domain.FrontApplyFlowLogDO">
+		select `ID`,`apply_odd`,`occur_time`,`log_message`,`replacement_value` from tb_front_apply_flow_log where ID = #{value}
+	</select>
+
+	<select id="list" resultType="com.winchampion.credit.business.domain.FrontApplyFlowLogDO">
+		select `ID`,`apply_odd`,`occur_time`,`log_message`,`replacement_value` from tb_front_apply_flow_log
+        <where>  
+		  		  <if test="id != null and id != ''"> and ID = #{id} </if>
+		  		  <if test="applyOdd != null and applyOdd != ''"> and apply_odd = #{applyOdd} </if>
+		  		  <if test="occurTime != null and occurTime != ''"> and occur_time = #{occurTime} </if>
+		  		  <if test="logMessage != null and logMessage != ''"> and log_message = #{logMessage} </if>
+		  		  <if test="replacementValue != null and replacementValue != ''"> and replacement_value = #{replacementValue} </if>
+		  		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by ID desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from tb_front_apply_flow_log
+		 <where>  
+		  		  <if test="id != null and id != ''"> and ID = #{id} </if>
+		  		  <if test="applyOdd != null and applyOdd != ''"> and apply_odd = #{applyOdd} </if>
+		  		  <if test="occurTime != null and occurTime != ''"> and occur_time = #{occurTime} </if>
+		  		  <if test="logMessage != null and logMessage != ''"> and log_message = #{logMessage} </if>
+		  		  <if test="replacementValue != null and replacementValue != ''"> and replacement_value = #{replacementValue} </if>
+		  		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.winchampion.credit.business.domain.FrontApplyFlowLogDO">
+		insert into tb_front_apply_flow_log
+		(
+			`ID`, 
+			`apply_odd`, 
+			`occur_time`, 
+			`log_message`, 
+			`replacement_value`
+		)
+		values
+		(
+			#{id}, 
+			#{applyOdd}, 
+			#{occurTime}, 
+			#{logMessage}, 
+			#{replacementValue}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.winchampion.credit.business.domain.FrontApplyFlowLogDO">
+		update tb_front_apply_flow_log 
+		<set>
+			<if test="applyOdd != null">`apply_odd` = #{applyOdd}, </if>
+			<if test="occurTime != null">`occur_time` = #{occurTime}, </if>
+			<if test="logMessage != null">`log_message` = #{logMessage}, </if>
+			<if test="replacementValue != null">`replacement_value` = #{replacementValue}</if>
+		</set>
+		where ID = #{id}
+	</update>
+	
+	<delete id="remove">
+		delete from tb_front_apply_flow_log where ID = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from tb_front_apply_flow_log where ID in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

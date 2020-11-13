@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.winchampion.credit.business.dao.CustomerDao">
+
+	<select id="get" resultType="com.winchampion.credit.business.domain.CustomerDO">
+		select `ID`
+			,`customer_no`
+			,`customer_name`
+			,REPLACE(customer_id_number, SUBSTR(customer_id_number,4,11), '********') as customerIdNumber
+			,`customer_phone`
+			,`is_real_name`
+			,`create_date`
+			,`real_name_date`
+			,`login_date`
+			,openid
+			,source_desc
+		from tb_customer where ID = #{id}
+	</select>
+
+	<select id="getByCustomerNo" resultType="com.winchampion.credit.business.domain.CustomerDO">
+		select `ID`
+			,`customer_no`
+			,`customer_name`
+			,REPLACE(customer_id_number, SUBSTR(customer_id_number,4,11), '********') as customerIdNumber
+			,`customer_phone`
+			,`is_real_name`
+			,`create_date`
+			,`real_name_date`
+			,`login_date`
+			,openid
+			,source_desc
+			
+		from tb_customer where customer_no = #{customerNo}
+	</select>
+
+	<select id="list" resultType="com.winchampion.credit.business.domain.CustomerDO">
+		
+		SELECT
+			tc.id as id,
+			tc.customer_no as customerNo,
+			tc.customer_name as customerName,
+			REPLACE(tc.customer_id_number, SUBSTR(tc.customer_id_number,4,11), '********') as customerIdNumber,
+			tc.customer_phone as customerPhone,
+			tc.is_real_name as isRealName,
+			(select count(*) from tb_customer_company tb where tb.customer_id = tc.id) as authCompanyNum,
+			tc.create_date as createDate,
+			tc.real_name_date as realNameDate,
+			tc.login_date as loginDate
+		FROM tb_customer tc
+        <where>
+        	<if test="customerNo != null and customerNo != ''"> and tc.customer_no = #{customerNo} </if>
+			<if test="customerPhone != null and customerPhone != ''"> and tc.customer_phone = #{customerPhone} </if>
+			<if test="customerName != null and customerName != ''"> and tc.customer_name = #{customerName} </if>
+			<if test="customerIdNumber != null and customerIdNumber != ''"> and tc.customer_id_number = #{customerIdNumber} </if>
+		</where>
+		order by tc.create_date desc
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from tb_customer tc
+		<where>
+			<if test="customerNo != null and customerNo != ''"> and tc.customer_no = #{customerNo} </if>
+			<if test="customerPhone != null and customerPhone != ''"> and tc.customer_phone = #{customerPhone} </if>
+			<if test="customerName != null and customerName != ''"> and tc.customer_name = #{customerName} </if>
+			<if test="customerIdNumber != null and customerIdNumber != ''"> and tc.customer_id_number = #{customerIdNumber} </if>
+		</where>
+	</select>
+	
+	<insert id="save" parameterType="com.winchampion.credit.business.domain.CustomerDO">
+		insert into tb_customer
+		(
+			`ID`, 
+			`customer_no`, 
+			`customer_name`, 
+			`customer_id_number`, 
+			`customer_phone`, 
+			`is_real_name`, 
+			`create_date`, 
+			`real_name_date`, 
+			`login_date`,
+			`source_desc`,
+			`certification_desc`
+		)
+		values
+		(
+			#{id}, 
+			#{customerNo}, 
+			#{customerName}, 
+			#{customerIdNumber}, 
+			#{customerPhone}, 
+			#{isRealName}, 
+			#{createDate}, 
+			#{realNameDate}, 
+			#{loginDate},
+			#{sourceDesc},
+			#{certificationDesc}
+		)
+	</insert>
+	
+	<update id="update" parameterType="com.winchampion.credit.business.domain.CustomerDO">
+		update tb_customer 
+		<set>
+			<if test="customerName != null">`customer_name` = #{customerName}, </if>
+			<if test="customerIdNumber != null">`customer_id_number` = #{customerIdNumber}, </if>
+			<if test="isRealName != null">`is_real_name` = #{isRealName}, </if>
+			<if test="realNameDate != null">`real_name_date` = #{realNameDate}, </if>
+			<if test="certificationDesc != null">`certification_desc` = #{certificationDesc}, </if>
+		</set>
+		 <where>  
+	  		  <if test="customerPhone != null and customerPhone != ''"> and customer_phone = #{customerPhone} </if>
+  		</where>
+	</update>
+</mapper>

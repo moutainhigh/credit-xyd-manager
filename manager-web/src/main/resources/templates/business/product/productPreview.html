@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<link rel="icon" href="../favicon.ico">
+<!-- <link href="/css/product/bootstrap.min.css" rel="stylesheet"> -->
+<link href="/css/product/front.css" rel="stylesheet">
+<link href="/css/product/index.css" rel="stylesheet">
+<style type="text/css">
+.mpmd_small {
+    width: 25px;
+    height: 40px;
+    left: 0;
+    top: 0;
+    position: absolute;
+    background: url("/img/icon_mpmd2.png") no-repeat;
+}
+.confirm{
+    border: 1px solid;
+    width: 120px;
+    height: 30px;
+    }
+</style>
+<body class="gray-bg" style="padding-left:50px;"><br/>
+  <!-- 发布事件 -->
+  <div class="issue_div" id="issueB"  th:if="${ifIssue eq 'true' && product.isRelease!='1'}">
+    <input id="productNo" name="productNo" th:value="${product.productNo}" type="hidden">
+    <input id="productId" name="productId" th:value="${product.id}" type="hidden">
+  	<h4>您当前正在发布产品，确认以下样式无误后，点击确认发布即可发布&nbsp;&nbsp;&nbsp;&nbsp;
+  		<button type="button" class="btn confirm"
+  			th:onclick="issue()">确认发布</button>&nbsp;&nbsp;&nbsp;&nbsp;
+  		<button type="button" class="btn confirm" onclick="window.close();">返回</button>
+  	</h4>
+  </div>
+  <button type="button" id="closeBtu" class="btn confirm" th:if="${ifIssue eq 'false' || product.isRelease=='1'}" onclick="window.close();">返回</button>
+  <br/><br/>
+  <!-- 样式1 -->
+  <h3><b>样式1</b></h3>
+  <div class="info_detail">
+	   <div class="short_border"></div>
+	   <p class="info_type">
+	    <!--  <i class="bank bank1"></i> -->
+	    <img alt="bank_img" class="bank bank1" th:src="${product.file}"/>
+	          <span class="bank_type"><!-- [[${product.insName}]] -->&nbsp;-&nbsp;<span class="type">[[${product.productName}]]</span></span>
+	    </p>
+	       <p class="desc_info">最高可贷金额</p>
+	       <p class="max_amount" id="maxAvailable" th:text="${#numbers.formatInteger(product.maxAvailable,0,'COMMA')}"></p>
+	       <div class="rate_info">[[${product.firstLine}]]</div>
+	       <p class="desc_info">[[${product.secondLine}]]&nbsp;&nbsp;[[${product.thirdLine}]]</p>
+	    <button type="button" class="btn_loan">我要贷款</button>
+   </div>
+	<br/><br/>
+	
+	 <h3><b>样式2</b></h3>
+	<table class="table table-hover">
+            <thead>
+            
+            </thead>
+            <tbody>
+                <tr style="background-color: white;">
+                 <th scope="row">
+                 	<div class="mpmd_small"  th:if="${product.approvalType eq '3'}" style="position: relative;float: left;"></div>
+                 	<div class="name_logo" style="width: 150px;padding-left: 50px;">
+                 		 <h4 style="margin: 8px 0 5px;">[[${product.productName}]]</h4>
+                 		  <img th:src="${product.file}" alt="bank_img" style="width: 90px;height: 26px;"/>
+                 	</div>
+                 </th>
+                 <th>
+                   <div class="tag_area">
+                      <p>
+                        <span class="tag">[[${product.keywordsOne}]]</span>
+                        <span class="tag" th:if="${product.keywordsTwo!=null&&product.keywordsTwo!=''}">[[${product.keywordsTwo}]]</span>
+                        <span class="tag" th:if="${product.keywordsThree!=null&&product.keywordsThree!=''}">[[${product.keywordsThree}]]</span>
+                      </p>
+                      <p>
+                        <span class="area_title">适用地区：</span>
+                        <span class="area"  th:each="p:${applyAreaList}"
+                            	th:if="${#strings.containsIgnoreCase(product.area,p.value)}" th:text="${p.name}"></span>
+                      </p>
+                    </div>
+                 </th>
+                 <th class="red" style="font-size: 18px;">[[${product.quickRelease}]]</th>
+                 <!-- <th class="red" style="font-size: 18px;">最高 [[${product.maxAvailable}]]万</th> 
+                  <th class="red" style="font-size: 18px;">最长 [[${product.maxLoanTerm}]]月</th>
+                  <th class="red" style="font-size: 18px;"> [[${product.minRate}]]-[[${product.maxRate}]]%</th>
+                  <th th:each="p: ${guarantyStyleList}"
+                      th:if="${#strings.containsIgnoreCase(product.guaranteeMode,p.value)}" th:text="${p.name}"></th>-->
+                 <th class="red" style="font-size: 18px;">[[${product.applyLimit}]]</th>
+                 <th class="red" style="font-size: 18px;">[[${product.applyDeadline}]]</th>
+                 <th class="red" style="font-size: 18px;">[[${product.referenceRate}]]</th>
+                 <th>[[${product.guarantyStyle}]]</th>
+                 <th style="text-align: right">
+                 	<button class="financing_btn" style="outline: none;color: rgba(232, 54, 48, 1);width: 90px;height: 36px;
+                                      background: rgba(255, 255, 255, 1);border-radius: 4px;border: 1px solid rgba(232, 54, 48, 1);">我要贷款</button>
+                 </th>
+                </tr>
+            </tbody>
+        </table>
+
+  <!-- 样式3 -->
+  <h3><b>样式3</b></h3>
+  <div class="content">
+    <div class="content_left">
+        <div class="base_plane">
+            <div class="base_title">
+                <div class="mpmd_small"  th:if="${product.approvalType eq '3'}"></div>
+                <img alt="bank_img" th:src="${product.file}"/>
+                &nbsp;-&nbsp;
+                <span class="name">[[${product.productName}]]</span>
+                <span class="tag">[[${product.firstLine}]]</span>
+                <span class="tag" th:if="${product.secondLine!=null&&product.secondLine!=''}">[[${product.secondLine}]]</span>
+                <span class="tag" th:if="${product.thirdLine!=null&&product.thirdLine!=''}">[[${product.thirdLine}]]</span>
+                <button class="btn btn-default financing_btn">我要贷款</button>
+            </div>
+            <div class="base_info">
+                <div class="bs-example" data-example-id="simple-table">
+                    <table class="table">
+                        <tbody>
+                        <tr style="height: 120px;">
+                            <td colspan="4">
+                                <span class="red">最高<span class="big_word" id="maxAvailable">[[${product.maxAvailableConvert}]]</span>万</span>
+                                <!-- <span class="red"><span class="big_word" id="maxAvailable">[[${product.applyLimit}]]</span></span> -->
+                                <br/>
+                                <span>贷款额度</span>
+                            </td>
+                            <td colspan="5">
+                                <span class="red big_word" id="rate">[[${product.minRate}]]-[[${product.maxRate}]]%</span>
+                                <br/>
+                                <span>参考利率</span>
+                            </td>
+                            <td colspan="3">
+                                <span class="red">最长<span class="big_word" id="loanTerm">[[${product.maxLoanTerm}]]</span>月</span>
+                                <br/>
+                                <span>申请期限</span>
+                            </td>
+                        </tr>
+                        <tr style="margin-top: 10px;">
+                            <td colspan="3">最快放款：<span class="black" id="quickRelease">[[${product.quickRelease}]]</span></td>
+                            <td colspan="3">担保方式：
+                            	<!-- <span class="black" id="guaranteeMode" th:each="p: ${guarantyStyleList}"
+                            	th:if="${#strings.containsIgnoreCase(product.guaranteeMode,p.value)}" th:text="${p.name}"></span> -->
+                            	 <span class="black" id="guaranteeMode">[[${product.guarantyStyle}]]</span>
+                            </td>
+                            <td colspan="3">还款方式：
+                              <!-- <span class="black" id="repaymentMethod" th:each="p: ${paymentMethodList}"
+                            	th:if="${#strings.containsIgnoreCase(product.repaymentMethod,p.value)}" th:text="${p.name+';'}"></span> -->
+                            	<span class="black" id="repaymentMethod">[[${product.repaymentStyle}]]</span>
+                             </td>
+                            <td colspan="3">适用范围：
+                            	<span class="black" id="area" th:each="p:${applyAreaList}"
+                            	th:if="${#strings.containsIgnoreCase(product.area,p.value)}" th:text="${p.name}"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="12">所属机构：<span class="black" id="insName">[[${product.insName}]]</span></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="detail_plane">
+	        <div class="detail_plane_left" style="height: 400px"></div>
+           <div th:each="info: ${infoList}">
+	            <div class="detail_plane_right">
+	            	<div class="detail_title"><span><div class="title_line1" th:utext="${info.productTitle}"></div></span></div>
+	                <div class="detail_info" th:utext="${info.info}"></div>
+	            </div>
+	            <div class="clr"></div>
+           </div>
+        </div>
+    </div>
+   
+    <div class="clr"></div>
+    <script type="text/javascript" src="/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/js/appjs/business/product/productDetails.js"></script>
+</div>
+</body>
+</html>

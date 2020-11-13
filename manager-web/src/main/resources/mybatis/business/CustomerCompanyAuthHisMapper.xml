@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.winchampion.credit.business.dao.CustomerCompanyAuthHisDao">
+
+	<select id="get" resultType="com.winchampion.credit.business.domain.CustomerCompanyAuthHisDO">
+		select `ID`
+			,`company_id`
+			,`company_no`
+			,`auth_date`
+			,`auth_result`
+			,`cname`
+			,`credit_code`
+			,`customer_id`
+		from tb_customer_company_auth_his where ID = #{value}
+	</select>
+
+	<select id="list" resultType="com.winchampion.credit.business.domain.CustomerCompanyAuthHisDO">
+		
+		SELECT
+			tcah.id as id,
+			tcah.company_id as companyId,
+			tcah.company_no as companyNo,
+			tcah.auth_date as authDate,
+			tcah.auth_result as authResult,
+			tcah.cname as cname,
+			tcah.credit_code as creditCode,
+			tcah.customer_id as customerId
+		FROM tb_customer_company_auth_his tcah
+        <where>
+        	<if test="companyId != null and companyId != ''"> and tcah.company_id = #{companyId} </if>
+        	<if test="companyNo != null and companyNo != ''"> and tcah.company_no = #{companyNo} </if>
+        	<if test="authResult != null and authResult != ''"> and tcah.auth_result = #{authResult} </if>
+        	<if test="cname != null and cname != ''"> and tcah.cname = #{cname} </if>
+			<if test="creditCode != null and creditCode != ''"> and tcah.credit_code = #{creditCode} </if>
+			<if test="customerId != null and customerId != ''"> and tcah.customer_id = #{customerId} </if>
+		</where>
+		order by tcah.auth_date desc
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from tb_customer_company_auth_his tcah
+		<where>
+			<if test="companyId != null and companyId != ''"> and tcah.company_id = #{companyId} </if>
+			<if test="companyNo != null and companyNo != ''"> and tcah.company_no = #{companyNo} </if>
+			<if test="authResult != null and authResult != ''"> and tcah.auth_result = #{authResult} </if>
+			<if test="cname != null and cname != ''"> and tcah.cname = #{cname} </if>
+			<if test="creditCode != null and creditCode != ''"> and tcah.credit_code = #{creditCode} </if>
+			<if test="customerId != null and customerId != ''"> and tcah.customer_id = #{customerId} </if>
+		</where>
+	</select>
+</mapper>

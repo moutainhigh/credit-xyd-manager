@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.winchampion.credit.business.dao.CreditProductDao">
+
+	<select id="get" resultType="com.winchampion.credit.business.domain.CreditProductDO">
+		select p.`id`,p.`product_no`,p.`product_name`,p.`institution_id`,p.`is_Release`,p.`create_date`,
+		p.`create_by`,p.`update_date`,p.`update_by`,p.`del_flag`,p.`product_info`,p.`keyword_one`,
+		p.`keyword_two`,p.`keyword_three`,p.`sector`,i.ins_name AS 'insName',i.file AS 'file',
+		u.`name` AS 'updateName',u2.`name` AS 'createName'
+		from tb_credit_product p
+		LEFT JOIN tb_ins i ON i.id = p.institution_id
+		LEFT JOIN sys_user u ON p.update_by = u.user_id
+		LEFT JOIN sys_user u2 ON p.create_by = u2.user_id
+		 where p.id = #{value}
+	</select>
+
+	<select id="list" resultType="com.winchampion.credit.business.domain.CreditProductDO">
+		select p.`id`,p.`product_no`,p.`product_name`,p.`institution_id`,p.`is_Release`,p.`create_date`,p.`create_by`,
+		p.`update_date`,p.`update_by`,p.`del_flag`,p.`product_info`,p.`keyword_one`,p.`keyword_two`,p.`keyword_three`,
+		p.`sector`,u.`name` AS 'updateName', i.ins_name AS 'insName' from tb_credit_product p 
+		LEFT JOIN sys_user u ON p.update_by = u.user_id
+		LEFT JOIN tb_ins i ON i.id = p.institution_id
+        <where>  p.`del_flag` = '0'
+		  		  <if test="id != null and id != ''"> and p.id = #{id} </if>
+		  		  <if test="productNo != null and productNo != ''"> and p.product_no = #{productNo} </if>
+		  		  <if test="productName != null and productName != ''"> and p.product_name like concat('%',#{productName},'%') </if>
+		  		  <if test="finEntId != null and finEntId != ''"> and p.institution_id = #{institutionId} </if>
+		  		  <if test="isRelease != null and isRelease != ''"> and p.is_release = #{isRelease} </if>
+		  		  <if test="createDate != null and createDate != ''"> and p.create_date = #{createDate} </if>
+		  		  <if test="insName != null and insName != ''"> and i.ins_name  like concat('%',#{insName},'%')</if>
+		  		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by p.update_date desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(p.id) from tb_credit_product p 
+		LEFT JOIN sys_user u ON p.update_by = u.user_id
+		LEFT JOIN tb_ins i ON i.id = p.institution_id
+		 <where>  p.`del_flag` = '0' 
+		  		  <if test="id != null and id != ''"> and p.id = #{id} </if>
+		  		  <if test="productNo != null and productNo != ''"> and p.product_no = #{productNo} </if>
+		  		  <if test="productName != null and productName != ''"> and p.product_name = #{productName} </if>
+		  		  <if test="finEntId != null and finEntId != ''"> and p.institution_id = #{institutionId} </if>
+		  		  <if test="isRelease != null and isRelease != ''"> and p.is_release = #{isRelease} </if>
+		  		  <if test="createDate != null and createDate != ''"> and p.create_date = #{createDate} </if>
+		  		  <if test="insName != null and insName != ''"> and i.ins_name = #{insName} </if>
+		  		</where>
+	</select>
+	
+	<select id="maxProductNo" resultType="String">
+		select p.`product_no` from tb_credit_product p ORDER BY p.product_no DESC LIMIT 1
+	</select>
+	 
+	<insert id="save" parameterType="com.winchampion.credit.business.domain.CreditProductDO">
+		insert into tb_credit_product
+		(
+			`id`, 
+			`product_no`, 
+			`product_name`, 
+			`institution_id`, 
+			`is_Release`, 
+			`create_date`, 
+			`create_by`, 
+			`update_date`, 
+			`update_by`, 
+			`del_flag`, 
+			`product_info`, 
+			`keyword_one`, 
+			`keyword_two`, 
+			`keyword_three`, 
+			`sector`
+		)
+		values
+		(
+			#{id}, 
+			#{productNo}, 
+			#{productName}, 
+			#{institutionId}, 
+			#{isRelease}, 
+			#{createDate}, 
+			#{createBy}, 
+			#{updateDate}, 
+			#{updateBy}, 
+			#{delFlag}, 
+			#{productInfo}, 
+			#{keywordOne}, 
+			#{keywordTwo}, 
+			#{keywordThree}, 
+			#{sector}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.winchampion.credit.business.domain.CreditProductDO">
+		update tb_credit_product 
+		<set>
+			<if test="productName != null">`product_name` = #{productName}, </if>
+			<if test="institutionId != null">`institution_id` = #{institutionId}, </if>
+			<if test="isRelease != null">`is_Release` = #{isRelease}, </if>
+			<if test="createDate != null">`create_date` = #{createDate}, </if>
+			<if test="createBy != null">`create_by` = #{createBy}, </if>
+			<if test="updateDate != null">`update_date` = #{updateDate}, </if>
+			<if test="updateBy != null">`update_by` = #{updateBy}, </if>
+			<if test="delFlag != null">`del_flag` = #{delFlag}, </if>
+			<if test="productInfo != null">`product_info` = #{productInfo}, </if>
+			<if test="keywordOne != null">`keyword_one` = #{keywordOne}, </if>
+			<if test="keywordTwo != null">`keyword_two` = #{keywordTwo}, </if>
+			<if test="keywordThree != null">`keyword_three` = #{keywordThree}, </if>
+			<if test="sector != null">`sector` = #{sector}</if>
+		</set>
+		<where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="productNo != null and productNo != ''"> and product_no= #{productNo} </if>
+		 </where>
+	</update>
+	
+	<delete id="remove">
+		delete from tb_credit_product where id = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from tb_credit_product where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

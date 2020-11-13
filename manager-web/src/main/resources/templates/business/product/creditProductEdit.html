@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<link rel="stylesheet" type="text/css" href="/css/business/productAdd.css">
+<script type="text/javascript" src="/js/kindeditor/kindeditor-all.js"></script>
+<script src="/js/layui.js"></script>
+<style type="text/css">
+ .must-hint{
+ 	color:red;
+ }
+</style>
+<body class="gray-bg">
+  <div style="padding-left: 20px;">
+  	<input type="hidden" id="productNo" th:value="${product.productNo}">
+  	<input type="hidden" id="productId" th:value="${product.id}">
+		<div style="float:right">	
+			<input class="btn btn-primary" type="button" value="保存" onclick="productSave('1')"/>	
+			<input class="btn btn-primary" type="button" value="保存并预览" onclick="productSave('3')"/>
+			<input class="btn btn-primary" type="button" value="取消" onclick="goBack()"/>
+		</div>
+		<div style="clear:both"></div>
+	<!--产品信息  -->
+	<h4 class="contentTitle">产品信息</h4>
+	<table class="table table-bordered table-condensed table-product">
+		<tbody>
+			<tr>
+				<th width="18%">产品名称&nbsp;&nbsp;<b class="must-hint">*</b></th>
+				<td width="32%">
+					<input id="productName" name="productName" type="text" placeholder="请输入产品名称" maxlength="12"
+						th:value="${product.productName}">
+					<font class="hint-font" id="productNameHint"></font>
+				</td>
+				<th width="18%"></th>
+				<td width="32%"></td>
+			</tr>
+		</tbody>
+	</table>
+	<!-- 所属信用机构 -->
+	<h4 class="contentTitle">所属信用机构</h4>
+	<table class="table table-bordered table-condensed table-product">
+		<tbody>
+			<tr>
+				<th width="18%">所属信用机构&nbsp;&nbsp;<b class="must-hint">*</b></th>
+				<td width="32%">
+					<select data-placeholder="选择类别" class="form-control chosen-select" id="institutionId"
+								tabindex="2" style="width: 100%">
+						<option value="">请选择信用机构</option>
+						<!-- <option th:each="p:${insList}" th:value="${p.id}" th:text="${p.insName}"></option> -->
+						<option th:each="p:${insList}" th:value="${p.id}" th:text="${p.insName}" 
+							th:selected="${product.institutionId == p.id}"></option>
+					</select>
+					<font class="hint-font" id="institutionIdHint"></font>
+				</td>
+				<th></th>
+				<td></td>
+			</tr>
+			<tr>
+				<th width="18%">机构LOGO&nbsp;&nbsp;<b class="must-hint">*</b></th>
+				<td width="32%"><img id="inslogo" th:src="${product.file}"/></td>
+				<th></th>
+				<td></td>
+			</tr>
+		</tbody>
+	</table>
+	
+	<!-- 产品概述 -->
+	<h4 class="contentTitle">产品概述</h4>
+	<table class="table table-bordered table-condensed table-product">
+		<tbody>
+			 <tr>
+						<th width="18%">产品概述&nbsp;&nbsp;<b class="must-hint">*</b></th>
+						<td width="80%">
+						   <textarea id="productInfo" name="productInfo" style="width: 700px;">[[${product.productInfo}]]</textarea><br/>
+						   <font style="font-size: 12px;color:gray;">说明:请精简描述</font>
+							<font class="hint-font" id="productInfoHint"></font>
+						</td>
+			</tr>
+		</tbody>
+	</table>
+	
+	<!-- 产品亮点关键词 -->
+	<h4 class="contentTitle">产品亮点关键词</h4>
+	<table class="table table-bordered table-condensed table-product">
+		<tbody>
+			<tr>
+				<th width="18%">亮点关键词1&nbsp;&nbsp;<b class="must-hint">*</b></th>
+				<td width="32%">
+					<input id="keywordOne" name="keywordOne" th:value="${product.keywordOne}" type="text">
+					<font class="hint-font" id="keywordOneHint"></font>
+				</td>
+				<th width="18%">亮点关键词2</th>
+				<td width="32%">
+					<input id="keywordTwo" name="keywordTwo" th:value="${product.keywordTwo}" type="text">
+					<font class="hint-font" id="keywordTwoHint"></font>
+				</td>
+			</tr>
+			<tr>
+				<th width="18%">亮点关键词3</th>
+				<td width="32%">
+					<input id="keywordThree" name="keywordThree" th:value="${product.keywordThree}" type="text">
+					<font class="hint-font" id="keywordThreeHint"></font>
+				</td>
+				<th></th>
+				<td></td>
+			</tr>
+		</tbody>
+	</table>
+	
+	
+	<!-- 产品所属板块 -->
+	<h4 class="contentTitle">产品所属板块</h4>
+	<table class="table table-bordered table-condensed table-product">
+		<tbody>
+			 <tr>
+						<th width="18%">产品所属板块&nbsp;&nbsp;<b class="must-hint">*</b></th>
+						<td width="80%">
+							<!-- <input name="sector" type="radio" th:each="p:${palteList}" th:value="${p.value}" th:text="${p.name}"
+								 th:field="*{product.sector}"/> -->
+							<!-- <input name="sector" type="checkbox" th:each="p:${palteList}" th:value="${p.value}" th:text="${p.name}" th:field="*{product.sector}"/> -->
+						    <input name="sector" type="checkbox" th:each="p:${palteList}" th:value="${p.value}" th:text="${p.name}"
+							  th:if="${#strings.containsIgnoreCase(product.sector,p.value)}" checked="checked"/>
+							<input name="sector" type="checkbox" th:each="p:${palteList}" th:value="${p.value}" th:text="${p.name}"
+							  th:if="${!#strings.containsIgnoreCase(product.sector,p.value)}"/>
+						</td>
+			</tr>
+		</tbody>
+	</table>
+	
+	<!-- 产品详情介绍 -->
+	<h4 class="contentTitle">产品详情介绍&nbsp;&nbsp;  <button type="button" class="addPlate">添加板块</button></h4>
+	<div class="showDetailWrap">
+		<div class="showDetail prductDetailsDiv" th:each="info: ${infoList}">
+			<p>
+				<span>标题</span>
+				<input type="text" value="" class="keyElementsKey" placeholder="请输入标题" th:value="${info.creditProductTitle}">
+				<font class="hint-font"></font>
+				<span class="productMove">
+					<span class="moveUp">上移</span>
+					<span class="moveDown">下移</span>
+					<span class="moveDetele">删除</span>
+				</span>
+			</p>
+			<textarea id="contentTag" class="detailMain" style="width:99.8%;height:300px;" th:utext="${info.creditProductInfo}"></textarea>	
+			<div style="clear:both;"></div>	
+		</div>
+	</div>
+	
+	<div style="text-align:center;">	
+		<input class="btn btn-primary" type="button" value="保存" onclick="productSave('1')"/>	
+		<input class="btn btn-primary" type="button" value="保存并预览" onclick="productSave('3')"/>
+		<input class="btn btn-primary" type="button" value="取消" onclick="goBack()"/>
+	</div>
+  
+  </div>
+  
+	<div th:include="include::footer"></div>
+	<script type="text/javascript" src="/js/appjs/business/product/creditProductAdd.js"></script>
+	<script type="text/javascript">
+	   /* kindEditor('${ctx}'); *///插件7367行处设置上传图片写入src的值
+	    KindEditor.options.filterMode = false;
+		KindEditor.ready(function(K) {
+			//window.editor = K.create('#contentTag');
+		     window.editor = K.create('.detailMain',{
+                uploadJson : '/business/editor/imgUpload',//post提交图片的地址，在后台按照往常的上传函数接受即可。
+                allowFileManager : true,
+                items:["undo", "redo", "|", "preview", "template", "code", 
+		               "cut", "copy", "paste", "plainpaste", "wordpaste","|", "justifyleft", "justifycenter",
+		               "justifyright", "justifyfull", "insertorderedlist", "insertunorderedlist", "indent", 
+		               "outdent", "subscript", "superscript", "clearhtml", "quickformat", "selectall", "|", 
+		               "fullscreen", "/", "formatblock", "fontname", "fontsize", "|", "forecolor", "hilitecolor", 
+		               "bold", "italic", "underline", "strikethrough", "lineheight", "removeformat", "|", "image", 
+		               "table", "hr", "emoticons", "baidumap", "pagebreak", 
+		               "anchor", "link", "unlink", "|", "about"],
+                afterUpload:function(data){
+                },
+                afterError : function(str) {
+                    alert('自定义错误信息: ' + str);
+                }
+            }); 
+		});
+		
+		layui.use('upload', function () {
+	        var upload = layui.upload;
+	        //执行实例
+	        var uploadInst = upload.render({
+	            elem: '#advertFiles', //绑定元素
+	            url: '/common/sysFile/uploadBase64', //上传接口
+	            size: 1000,
+	            accept: 'file',
+	            done: function (r) {
+	                layer.msg(r.msg);
+	                $("#baseFile").attr("src", r.base64 );
+	                $("#advertFile").val(r.base64);
+	            },
+	            error: function (r) {
+	                layer.msg(r.msg);
+	            }
+	        });
+	    });
+	</script>
+</body>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body>
+<div class="panel panel-default">
+	<div style="padding: 10px 0 20px 20px;">
+		<h5>注册账户信息</h5>
+		<table style="width: 50%" class="table table-bordered">
+			<tr>
+				<th>唯一标识</th>
+				<td hidden><span id="customerId" th:text="${customerDO.id}"></span></td>
+				<td><span th:text="${customerDO.customerNo}"></span></td>
+				<th>手机号/账户名</th>
+				<td><span th:text="${customerDO.customerPhone}"></span></td>
+			</tr>
+			<tr>
+				<th>账户注册时间</th>
+				<td><span th:text="${customerDO.createDate}"></span></td>
+				<th>最后登录时间</th>
+				<td><span th:text="${customerDO.loginDate}"></span></td>
+			</tr>
+			<tr>
+				<th>在线状态</th>
+				<td>
+					<span th:if="${customerDO.onlineState eq 'on_line'}" class="label label-success">在线</span>
+					<span th:if="${customerDO.onlineState eq 'off_line'}" class="label label-primary">离线</span>
+				</td>
+				<th>微信openid</th>
+				<td><span th:text="${customerDO.openid}"></span></td>
+			</tr>
+			<tr>
+				<th>注册渠道来源</th>
+				<td>
+					<span th:text="${customerDO.sourceDesc_}"></span>
+				</td>
+				<th></th>
+				<td></td>
+			</tr>
+		</table>
+
+		<h5>个人信息</h5>
+		<table style="width: 50%" class="table table-bordered">
+			<tr>
+				<th>姓名</th>
+				<td><span th:text="${customerDO.customerName}"></span></td>
+				<th>身份证号</th>
+				<td><span th:text="${customerDO.customerIdNumber}"></span></td>
+			</tr>
+			<tr>
+				<th>手机号</th>
+				<td><span th:text="${customerDO.customerPhone}"></span></td>
+				<th>实名认证状态</th>
+				<td><span th:text="${customerDO.isRealNameDesc}"></span></td>
+			</tr>
+			<tr>
+				<th>个人实名认证时间</th>
+				<td><span th:text="${customerDO.realNameDate}"></span></td>
+				<th></th>
+				<td></td>
+			</tr>
+		</table>
+
+		<h5>企业信息</h5>
+		<table id="companyTable" data-mobile-responsive="true">
+		</table>
+
+		<h5>发布的企业融资需求</h5>
+		<table id="financeTable" data-mobile-responsive="true">
+		</table>
+
+		<h5>个人信用报告查询记录</h5>
+		<table id="reportTable" data-mobile-responsive="true">
+		</table>
+
+		<button class="btn" onclick="window.history.back(-1);">返回</button>
+	</div>
+</div>
+<div th:include="include :: footer"></div>
+<script type="text/javascript"
+		src="/js/appjs/business/userManage/registerAccountDetail.js?v=20200306002"></script>
+</body>
+</html>

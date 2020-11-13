@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.winchampion.credit.business.dao.FaqFeedbackRecordDao">
+
+	<select id="get" resultType="com.winchampion.credit.business.domain.FaqFeedbackRecordDO">
+		select f.`ID`,f.`faq_no`,f.`customer_id`,f.`contact_name`,f.`contact_phone`,f.`problem_description`,f.`release_time`,
+		f.`graphic_code`,f.`processed`,c.`customer_phone` AS 'customerPhone',c.`customer_name` AS 'customerName'
+		from tb_faq_feedback_record f
+		left join tb_customer c on c.ID = f.customer_id
+		where f.ID = #{value}
+	</select>
+
+	<select id="list" resultType="com.winchampion.credit.business.domain.FaqFeedbackRecordDO">
+		select f.`ID`,f.`faq_no`,f.`customer_id`,f.`contact_name`,f.`contact_phone`,f.`problem_description`,f.`release_time`,
+		f.`graphic_code`,f.`processed`,c.`customer_phone` AS 'customerPhone',c.`customer_name` AS 'customerName' 
+		from tb_faq_feedback_record f
+		left join tb_customer c on c.ID = f.customer_id
+        <where>  
+		  		  <if test="id != null and id != ''"> and f.ID = #{id} </if>
+		  		  <if test="faqNo != null and faqNo != ''"> and f.faq_no = #{faqNo} </if>
+		  		  <if test="customerId != null and customerId != ''"> and f.customer_id = #{customerId} </if>
+		  		  <if test="contactName != null and contactName != ''"> and f.contact_name = #{contactName} </if>
+		  		  <if test="contactPhone != null and contactPhone != ''"> and f.contact_phone = #{contactPhone} </if>
+		  		  <if test="problemDescription != null and problemDescription != ''"> and f.problem_description = #{problemDescription} </if>
+		  		  <if test="releaseTime != null and releaseTime != ''"> and f.release_time = #{releaseTime} </if>
+		 </where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by f.release_time desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from tb_faq_feedback_record
+		 <where>  
+		  		  <if test="id != null and id != ''"> and ID = #{id} </if>
+		  		  <if test="faqNo != null and faqNo != ''"> and faq_no = #{faqNo} </if>
+		  		  <if test="customerId != null and customerId != ''"> and customer_id = #{customerId} </if>
+		  		  <if test="contactName != null and contactName != ''"> and contact_name = #{contactName} </if>
+		  		  <if test="contactPhone != null and contactPhone != ''"> and contact_phone = #{contactPhone} </if>
+		  		  <if test="problemDescription != null and problemDescription != ''"> and problem_description = #{problemDescription} </if>
+		  		  <if test="releaseTime != null and releaseTime != ''"> and release_time = #{releaseTime} </if>
+		  		  <if test="isTourist != null and isTourist != ''"> and is_tourist = #{isTourist} </if>
+		  		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.winchampion.credit.business.domain.FaqFeedbackRecordDO">
+		insert into tb_faq_feedback_record
+		(
+			`ID`, 
+			`faq_no`, 
+			`customer_id`, 
+			`contact_name`, 
+			`contact_phone`, 
+			`problem_description`, 
+			`release_time`, 
+			`graphic_code`,
+			`processed`
+		)
+		values
+		(
+			#{id}, 
+			#{faqNo}, 
+			#{customerId}, 
+			#{contactName}, 
+			#{contactPhone}, 
+			#{problemDescription}, 
+			#{releaseTime}, 
+			#{graphicCode},
+			#{processed}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.winchampion.credit.business.domain.FaqFeedbackRecordDO">
+		update tb_faq_feedback_record 
+		<set>
+			<if test="faqNo != null">`faq_no` = #{faqNo}, </if>
+			<if test="customerId != null">`customer_id` = #{customerId}, </if>
+			<if test="contactName != null">`contact_name` = #{contactName}, </if>
+			<if test="contactPhone != null">`contact_phone` = #{contactPhone}, </if>
+			<if test="problemDescription != null">`problem_description` = #{problemDescription}, </if>
+			<if test="releaseTime != null">`release_time` = #{releaseTime}, </if>
+			<if test="graphicCode != null">`graphic_code` = #{graphicCode}</if>
+			<if test="processed != null">`processed` = #{processed}</if>
+		</set>
+		where ID = #{id}
+	</update>
+	
+	<delete id="remove">
+		delete from tb_faq_feedback_record where ID = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from tb_faq_feedback_record where ID in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

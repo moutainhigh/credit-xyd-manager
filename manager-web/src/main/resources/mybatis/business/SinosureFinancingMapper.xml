@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.winchampion.credit.business.dao.SinosureFinancingDao">
+
+	<select id="get" resultType="com.winchampion.credit.business.domain.SinosureFinancingDO">
+		select s.`ID`,s.`apply_odd`,s.`industry`,s.`primary_business`,s.`last_year_total_assets`,s.`last_year_debt_ratio`,
+		s.`last_year_primary_income`,s.`last_year_retained_profits`,s.`number_of_employees`,s.`credit_bank_number`,
+		s.`credit_amount`,s.`name`,s.`mobile_phone`,s.`duty`,s.`mailbox`,s.`product_name`,s.`organization_name`,s.`apply_time`
+		from tb_sinosure_financing s where s.ID = #{value}
+	</select>
+
+	<select id="list" resultType="com.winchampion.credit.business.domain.SinosureFinancingDO">
+		select s.`ID`,s.`apply_odd`,s.`industry`,s.`primary_business`,s.`last_year_total_assets`,s.`last_year_debt_ratio`,
+		s.`last_year_primary_income`,s.`last_year_retained_profits`,s.`number_of_employees`,s.`credit_bank_number`,
+		s.`credit_amount`,s.`name`,s.`mobile_phone`,s.`duty`,s.`mailbox`,s.`product_name`,s.`organization_name`,s.`apply_time`
+		from tb_sinosure_financing s 
+        <where>  
+		  		  <if test="id != null and id != ''"> and ID = #{id} </if>
+		  		  <if test="applyOdd != null and applyOdd != ''"> and apply_odd = #{applyOdd} </if>
+		  		  <if test="industry != null and industry != ''"> and industry = #{industry} </if>
+		  		  <if test="primaryBusiness != null and primaryBusiness != ''"> and primary_business = #{primaryBusiness} </if>
+		  		  <if test="lastYearTotalAssets != null and lastYearTotalAssets != ''"> and last_year_total_assets = #{lastYearTotalAssets} </if>
+		  		  <if test="lastYearDebtRatio != null and lastYearDebtRatio != ''"> and last_year_debt_ratio = #{lastYearDebtRatio} </if>
+		  		  <if test="lastYearPrimaryIncome != null and lastYearPrimaryIncome != ''"> and last_year_primary_income = #{lastYearPrimaryIncome} </if>
+		  		  <if test="lastYearRetainedProfits != null and lastYearRetainedProfits != ''"> and last_year_retained_profits = #{lastYearRetainedProfits} </if>
+		  		  <if test="numberOfEmployees != null and numberOfEmployees != ''"> and number_of_employees = #{numberOfEmployees} </if>
+		  		  <if test="creditBankNumber != null and creditBankNumber != ''"> and credit_bank_number = #{creditBankNumber} </if>
+		  		  <if test="creditAmount != null and creditAmount != ''"> and credit_amount = #{creditAmount} </if>
+		  		  <if test="name != null and name != ''"> and name = #{name} </if>
+		  		  <if test="mobilePhone != null and mobilePhone != ''"> and mobile_phone = #{mobilePhone} </if>
+		  		  <if test="duty != null and duty != ''"> and duty = #{duty} </if>
+		  		  <if test="mailbox != null and mailbox != ''"> and mailbox = #{mailbox} </if>
+		  		  <if test="productName != null and productName != ''"> and s.product_name = #{productName} </if>
+		  		  <if test="organizationName != null and organizationName != ''"> and s.organization_name = #{organizationName} </if>
+		  		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by s.apply_time desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from tb_sinosure_financing s 
+		  <where>  
+		  		  <if test="id != null and id != ''"> and ID = #{id} </if>
+		  		  <if test="applyOdd != null and applyOdd != ''"> and apply_odd = #{applyOdd} </if>
+		  		  <if test="industry != null and industry != ''"> and industry = #{industry} </if>
+		  		  <if test="primaryBusiness != null and primaryBusiness != ''"> and primary_business = #{primaryBusiness} </if>
+		  		  <if test="lastYearTotalAssets != null and lastYearTotalAssets != ''"> and last_year_total_assets = #{lastYearTotalAssets} </if>
+		  		  <if test="lastYearDebtRatio != null and lastYearDebtRatio != ''"> and last_year_debt_ratio = #{lastYearDebtRatio} </if>
+		  		  <if test="lastYearPrimaryIncome != null and lastYearPrimaryIncome != ''"> and last_year_primary_income = #{lastYearPrimaryIncome} </if>
+		  		  <if test="lastYearRetainedProfits != null and lastYearRetainedProfits != ''"> and last_year_retained_profits = #{lastYearRetainedProfits} </if>
+		  		  <if test="numberOfEmployees != null and numberOfEmployees != ''"> and number_of_employees = #{numberOfEmployees} </if>
+		  		  <if test="creditBankNumber != null and creditBankNumber != ''"> and credit_bank_number = #{creditBankNumber} </if>
+		  		  <if test="creditAmount != null and creditAmount != ''"> and credit_amount = #{creditAmount} </if>
+		  		  <if test="name != null and name != ''"> and name = #{name} </if>
+		  		  <if test="mobilePhone != null and mobilePhone != ''"> and mobile_phone = #{mobilePhone} </if>
+		  		  <if test="duty != null and duty != ''"> and duty = #{duty} </if>
+		  		  <if test="mailbox != null and mailbox != ''"> and mailbox = #{mailbox} </if>
+		  		  <if test="productName != null and productName != ''"> and s.product_name = #{productName} </if>
+		  		  <if test="organizationName != null and organizationName != ''"> and s.organization_name = #{organizationName} </if>
+		  		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.winchampion.credit.business.domain.SinosureFinancingDO">
+		insert into tb_sinosure_financing
+		(
+			`ID`, 
+			`apply_odd`, 
+			`industry`, 
+			`primary_business`, 
+			`last_year_total_assets`, 
+			`last_year_debt_ratio`, 
+			`last_year_primary_income`, 
+			`last_year_retained_profits`, 
+			`number_of_employees`, 
+			`credit_bank_number`, 
+			`credit_amount`, 
+			`name`, 
+			`mobile_phone`, 
+			`duty`, 
+			`mailbox`
+		)
+		values
+		(
+			#{id}, 
+			#{applyOdd}, 
+			#{industry}, 
+			#{primaryBusiness}, 
+			#{lastYearTotalAssets}, 
+			#{lastYearDebtRatio}, 
+			#{lastYearPrimaryIncome}, 
+			#{lastYearRetainedProfits}, 
+			#{numberOfEmployees}, 
+			#{creditBankNumber}, 
+			#{creditAmount}, 
+			#{name}, 
+			#{mobilePhone}, 
+			#{duty}, 
+			#{mailbox}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.winchampion.credit.business.domain.SinosureFinancingDO">
+		update tb_sinosure_financing 
+		<set>
+			<if test="applyOdd != null">`apply_odd` = #{applyOdd}, </if>
+			<if test="industry != null">`industry` = #{industry}, </if>
+			<if test="primaryBusiness != null">`primary_business` = #{primaryBusiness}, </if>
+			<if test="lastYearTotalAssets != null">`last_year_total_assets` = #{lastYearTotalAssets}, </if>
+			<if test="lastYearDebtRatio != null">`last_year_debt_ratio` = #{lastYearDebtRatio}, </if>
+			<if test="lastYearPrimaryIncome != null">`last_year_primary_income` = #{lastYearPrimaryIncome}, </if>
+			<if test="lastYearRetainedProfits != null">`last_year_retained_profits` = #{lastYearRetainedProfits}, </if>
+			<if test="numberOfEmployees != null">`number_of_employees` = #{numberOfEmployees}, </if>
+			<if test="creditBankNumber != null">`credit_bank_number` = #{creditBankNumber}, </if>
+			<if test="creditAmount != null">`credit_amount` = #{creditAmount}, </if>
+			<if test="name != null">`name` = #{name}, </if>
+			<if test="mobilePhone != null">`mobile_phone` = #{mobilePhone}, </if>
+			<if test="duty != null">`duty` = #{duty}, </if>
+			<if test="mailbox != null">`mailbox` = #{mailbox}</if>
+		</set>
+		where ID = #{id}
+	</update>
+	
+	<delete id="remove">
+		delete from tb_sinosure_financing where ID = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from tb_sinosure_financing where ID in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<script type="text/javascript" src="/js/kindeditor/kindeditor-all.js"></script>
+<!-- 上传图片所用的css -->
+ <link href="/css/layui.css" rel="stylesheet">
+ <style type="text/css">
+ .must-hint{
+ 	color:red;
+ }
+</style>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content ">
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="ibox float-e-margins">
+					<div class="ibox-content">
+						<form class="form-horizontal m-t" id="advertForm">
+						   <h3>申请基本信息</h3><br/>
+						   <input type="hidden" id="customerId" th:value="${productApplyLog.customerId}">
+							<div class="form-group">	
+								<label class="col-sm-3 control-label">申请单号</label>
+								<div class="col-sm-8">[[${productApplyLog.applyOdd}]]</div>
+							</div>
+							<div class="form-group">	
+								<label class="col-sm-3 control-label">申请类型</label>
+								<div class="col-sm-8">[[${productApplyLog.applicationDes}]]</div>
+							</div>
+							<div class="form-group">	
+								<label class="col-sm-3 control-label">用户姓名</label>
+								<div class="col-sm-8">[[${productApplyLog.customerName}]]</div>
+							</div>
+							<div class="form-group">	
+								<label class="col-sm-3 control-label">用户</label>
+								<div class="col-sm-8">
+								<a onclick="customer()" style="color: #337ab7;">[[${productApplyLog.customerPhone}]]</a></div>
+							</div>
+							<div class="form-group">	
+								<label class="col-sm-3 control-label">产品名称</label>
+								<div class="col-sm-8">[[${productApplyLog.productName}]]</div>
+							</div>
+							<div class="form-group">	
+								<label class="col-sm-3 control-label">所属金融机构</label>
+								<div class="col-sm-8">[[${productApplyLog.insName}]]</div>
+							</div>
+							<div class="form-group">	
+								<label class="col-sm-3 control-label">申请时间</label>
+								<div class="col-sm-8">[[${productApplyLog.applyTime}]]</div>
+							</div>
+							<div class="form-group">	
+								<label class="col-sm-3 control-label">状态</label>
+								<div class="col-sm-8">[[${productApplyLog.applyResultDes}]]</div>
+							</div>
+							
+							<!-- <div class="form-group">
+								<div class="col-sm-8 col-sm-offset-3">
+									<button type="button" class="btn btn-primary" onclick="goBack()">返回</button>
+								</div>
+							</div> -->
+						<br/><br/>
+						
+							<div th:if="${productApplyLog.applicationType=='3'}">
+								<h3>在线申请定制流程信息</h3><br/>
+								<div class="form-group">	
+									<label class="col-sm-3 control-label">前台进程信息</label>
+									<div class="col-sm-8">
+										<table class="table table-bordered table-condensed">
+											<tr>
+												<th>发生时间</th>
+												<th>进程记录信息</th>
+											</tr>
+											<tr th:each="flowLog: ${flowLoglist}">
+											   <td th:text="${flowLog.occurTime}"></td>
+											   <td th:text="${flowLog.logMessage}"></td>
+											</tr>
+										</table>
+									</div>
+								</div>
+								
+								<!-- <div class="form-group">	
+									<label class="col-sm-3 control-label">后台进程信息</label>
+									<div class="col-sm-8">[[${productApplyLog.applyOdd}]]</div>
+								</div> -->
+							</div>
+							
+							<div th:if="${productApplyLog.applicationType=='4'}">
+								<h3>填写企业信息</h3><br/>
+								<div class="form-group">	
+									<label class="col-sm-3 control-label">企业信息</label>
+									<div class="col-sm-8">[[${productApplyLog.companyMessage}]]</div>
+								</div>
+							</div>
+							<div class="form-group">
+									<div class="col-sm-8 col-sm-offset-3">
+										<button type="button" class="btn btn-primary" onclick="goBack()">返回</button>
+									</div>
+							     </div>
+						</form>
+					</div>
+				</div>
+			</div>
+	</div>
+	</div>
+	<div th:include="include::footer"></div>
+	<script type="text/javascript">
+		function goBack(){
+			var uRef = document.referrer;
+			window.location.href=uRef;
+		}
+		
+		function customer(){
+			var customerId = $("#customerId").val();
+			 window.location.href= '/business/userManage/registerAccountDetail/'+customerId;
+		}
+	</script>
+</body>
+</html>

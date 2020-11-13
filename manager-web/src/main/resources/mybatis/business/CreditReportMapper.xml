@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.winchampion.credit.business.dao.CreditReportDao">
+
+	<select id="list" resultType="com.winchampion.credit.business.domain.CreditReportDo">
+		SELECT
+			tcr.id as id,
+			tcr.search_id as searchId,
+			tcr.report_type as reportType,
+			tcr.cname as cname,
+			tcr.credit_code as creditCode,
+			tcr.search_date as searchDate,
+			tcr.search_result as searchResult,
+			tcr.search_result_name as searchResultName,
+			tcr.customer_id as customerId
+		FROM tb_credit_report tcr
+        <where>
+        	<if test="searchId != null and searchId != ''"> and tcr.search_id = #{searchId} </if>
+        	<if test="reportType != null and reportType != ''"> and tcr.report_type = #{reportType} </if>
+			<if test="customerId != null and customerId != ''"> and tcr.customer_id = #{customerId} </if>
+		</where>
+		order by tcr.search_date desc
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from tb_credit_report tcr
+		<where>
+			<if test="searchId != null and searchId != ''"> and tcr.search_id = #{searchId} </if>
+			<if test="reportType != null and reportType != ''"> and tcr.report_type = #{reportType} </if>
+			<if test="customerId != null and customerId != ''"> and tcr.customer_id = #{customerId} </if>
+		</where>
+	</select>
+</mapper>

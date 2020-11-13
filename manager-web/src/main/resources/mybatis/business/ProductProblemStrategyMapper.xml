@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.winchampion.credit.business.dao.ProductProblemStrategyDao">
+
+	<select id="get" resultType="com.winchampion.credit.business.domain.ProductProblemStrategyDO">
+		select `id`,`product_id`,`problem_id`,`match_option`,`home_value` from tb_product_problem_strategy where id = #{value}
+	</select>
+
+	<select id="list" resultType="com.winchampion.credit.business.domain.ProductProblemStrategyDO">
+		select a.`id`,a.`product_id`,a.`problem_id`,
+				group_concat(a.match_option) AS "matchOption",a.`home_value`,
+			   b.product_no AS "productNo",b.product_name AS "productName",c.ins_name AS "insName",d.problem_options AS "problemOptions"
+		from tb_product_problem_strategy a
+		LEFT JOIN tb_product b ON a.product_id = b.id
+		LEFT JOIN tb_ins c ON c.id = b.fin_ent_id
+		LEFT JOIN tb_problem d ON d.id = a.problem_id
+        <where>  
+		  		  <if test="id != null and id != ''"> and a.id = #{id} </if>
+		  		  <if test="productId != null and productId != ''"> and a.product_id = #{productId} </if>
+		  		  <if test="problemId != null and problemId != ''"> and a.problem_id = #{problemId} </if>
+		  		  <if test="matchOption != null and matchOption != ''"> and a.match_option = #{matchOption} </if>
+		  		  <if test="homeValue != null and homeValue != ''"> and a.home_value = #{homeValue} </if>
+		  		</where>
+		<if test="problemId != null and problemId != ''">
+			GROUP BY a.problem_id
+		</if>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by a.id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+	<select id="compositeList" resultType="com.winchampion.credit.business.domain.ProductProblemStrategyDO">
+		  SELECT 
+			e.id AS 'productId',
+			e.product_no AS 'productNo',
+			e.product_name AS 'productName',
+			e.ins_name AS 'insName',
+			group_concat(concat( e.problem_id, ':' , e.match_option) separator ';') as 'matchOption',
+			e.`name` AS 'updateName',
+			e.strategy_update_date AS 'updateDate' 
+  			FROM (SELECT
+			b.id,
+			a.problem_id,
+			b.product_no,
+			b.product_name,
+			a.match_option,
+			b.sort,
+			b.strategy_update_date,
+			b.strategy_update_by,
+			c.ins_name,
+		  u.`name`
+		FROM
+			tb_product b
+		LEFT JOIN tb_product_problem_strategy a ON a.product_id = b.id
+		LEFT JOIN tb_ins c ON c.id = b.fin_ent_id
+		LEFT JOIN tb_problem d ON d.id = a.problem_id
+		LEFT JOIN sys_user u ON u.user_id = b.strategy_update_by
+		WHERE b.del_flag = '0' AND b.is_release = '1'
+		ORDER BY b.sort ASC
+) e
+		GROUP BY e.product_no
+		ORDER BY e.sort ASC
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+	
+	
+ 	<select id="count" resultType="int">
+		select count(*) from tb_product_problem_strategy
+		 <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="productId != null and productId != ''"> and product_id = #{productId} </if>
+		  		  <if test="problemId != null and problemId != ''"> and problem_id = #{problemId} </if>
+		  		  <if test="matchOption != null and matchOption != ''"> and match_option = #{matchOption} </if>
+		  		  <if test="homeValue != null and homeValue != ''"> and home_value = #{homeValue} </if>
+		  		</where>
+	</select>
+	
+	<select id="compositeCount" resultType="int">
+		SELECT COUNT(f.productId) FROM	
+		(
+		SELECT 
+			e.id AS 'productId',
+			e.product_no AS 'productNo',
+			e.product_name AS 'productName',
+			e.ins_name AS 'insName',
+			group_concat(concat( e.problem_id, ':' , e.match_option) separator ';') as 'matchOption',
+			e.`name` AS 'updateName',
+			e.strategy_update_date AS 'updateDate' 
+  			FROM (SELECT
+			b.id,
+			a.problem_id,
+			b.product_no,
+			b.product_name,
+			a.match_option,
+			b.sort,
+			b.strategy_update_date,
+			b.strategy_update_by,
+			c.ins_name,
+		  u.`name`
+		FROM
+			tb_product b
+		LEFT JOIN tb_product_problem_strategy a ON a.product_id = b.id
+		LEFT JOIN tb_ins c ON c.id = b.fin_ent_id
+		LEFT JOIN tb_problem d ON d.id = a.problem_id
+		LEFT JOIN sys_user u ON u.user_id = b.strategy_update_by
+		WHERE b.del_flag = '0' AND b.is_release = '1'
+		ORDER BY b.sort ASC
+) e
+		GROUP BY e.product_no
+		ORDER BY e.sort ASC) f
+	</select>
+	 
+	<insert id="save" parameterType="com.winchampion.credit.business.domain.ProductProblemStrategyDO">
+		insert into tb_product_problem_strategy
+		(
+			`id`, 
+			`product_id`, 
+			`problem_id`, 
+			`match_option`, 
+			`home_value`
+		)
+		values
+		(
+			#{id}, 
+			#{productId}, 
+			#{problemId}, 
+			#{matchOption}, 
+			#{homeValue}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.winchampion.credit.business.domain.ProductProblemStrategyDO">
+		update tb_product_problem_strategy 
+		<set>
+			<if test="productId != null">`product_id` = #{productId}, </if>
+			<if test="problemId != null">`problem_id` = #{problemId}, </if>
+			<if test="matchOption != null">`match_option` = #{matchOption}, </if>
+			<if test="homeValue != null">`home_value` = #{homeValue}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="remove">
+		delete from tb_product_problem_strategy where id = #{value}
+	</delete>
+	
+	<delete id="removeProductId">
+		delete from tb_product_problem_strategy where product_id = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from tb_product_problem_strategy where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+	
+	<select id="getOptionsList" resultType="int">
+		select count(*) from tb_product_problem_strategy where `problem_id` = #{problemId} and match_option in
+		 <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+	</select>
+	
+	<insert id="batchInsert" parameterType="com.winchampion.credit.business.domain.ProductProblemStrategyDO">
+		insert into tb_product_problem_strategy (id,product_id,problem_id,match_option,home_value) VALUES
+		<foreach collection="list" item="item" index="index" separator=",">
+		(#{item.id},#{item.productId},#{item.problemId},#{item.matchOption},#{item.homeValue})
+		</foreach>
+	</insert>
+
+</mapper>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:shiro="http://www.w3.org/1999/xhtml">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content ">
+		<div class="col-sm-12">
+			<div class="ibox">
+				<div class="ibox-body">
+					<div class="fixed-table-toolbar">
+						<div class="pull-left search col-md-2">
+							<input id="customerPhone" type="text" class="form-control"
+								   placeholder="注册手机号">
+						</div>
+						<div class="pull-left search col-md-2">
+							<input id="customerName" type="text" class="form-control"
+								   placeholder="姓名">
+						</div>
+						<div class="pull-left search col-md-2">
+							<input id="customerIdNumber" type="text" class="form-control"
+								   placeholder="身份证号">
+						</div>
+						<div class="columns pull-left col-md-2">
+							<select id="onlineState" data-placeholder="在线状态" class="form-control chosen-select"
+									tabindex="2" style="width: 100%">
+								<option value="">在线状态</option>
+								<option value="1">在线</option>
+								<option value="0">离线</option>
+							</select>
+						</div>
+						<div class="columns pull-left">
+							<button class="btn btn-success" onclick="reLoad()">查询</button>
+							<button class="btn btn-warning" onclick="cleanInput()">清空</button>
+						</div>
+					</div>
+					<table id="exampleTable" data-mobile-responsive="true">
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--shiro控制bootstraptable行内按钮看见性 来自bootdo的创新方案 -->
+	<div>
+		<script type="text/javascript">
+			var s_edit_h = 'hidden';
+			var s_remove_h = 'hidden';
+			var s_resetPwd_h = 'hidden';
+		</script>
+	</div>
+	<div shiro:hasPermission="business:userManage:accountView">
+		<script type="text/javascript">
+			s_edit_h = '';
+		</script>
+	</div>
+	<div shiro:hasPermission="business:userManage:accountView">
+		<script type="text/javascript">
+			var s_remove_h = '';
+		</script>
+	</div>
+	<div shiro:hasPermission="business:userManage:accountView">
+		<script type="text/javascript">
+			var s_add_h = '';
+		</script>
+	</div>
+
+	</div>
+	<div th:include="include :: footer"></div>
+	<script type="text/javascript"
+		src="/js/appjs/business/userManage/registerAccountList.js?v=20200306004"></script>
+</body>
+</html>

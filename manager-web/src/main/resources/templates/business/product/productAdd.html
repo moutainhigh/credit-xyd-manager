@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<link rel="stylesheet" type="text/css" href="/css/business/productAdd.css">
+<script type="text/javascript" src="/js/appjs/business/product/productAdd.js"></script>
+<script type="text/javascript" src="/js/kindeditor/kindeditor-all.js"></script>
+<script src="/js/layui.js"></script>
+<style type="text/css">
+ .must-hint{
+ 	color:red;
+ }
+ .kehujingli{
+ 	display: none;
+ }
+</style>
+<body class="gray-bg">
+  <div style="padding-left: 20px;">
+  	<input type="hidden" id="productNo" value=""><br/>
+		<div style="float:right">	
+			 <input class="btn btn-primary" type="button" value="保存" onclick="productSave('1')"/>	
+			 <input class="btn btn-primary" type="button" value="保存并预览" onclick="productSave('3')"/>
+			 <input class="btn btn-primary" type="button" value="取消" onclick="goBack()"/>
+		</div>
+		<div style="clear:both"></div>
+	<!--产品信息  -->
+	<h4 class="contentTitle">产品信息</h4>
+	<table class="table table-bordered table-condensed table-product">
+		<tbody>
+			<tr>
+				<th width="18%">产品名称&nbsp;&nbsp;<b class="must-hint">*</b></th>
+				<td width="32%">
+					<input id="productName" name="productName" type="text" placeholder="请输入产品名称" maxlength="12">
+					<font class="hint-font" id="productNameHint">不超过30字符/15个中文字</font>
+				</td>
+				<th width="18%">产品类型&nbsp;&nbsp;<b class="must-hint">*</b></th>
+				<td width="32%"><input name="productType" type="radio" th:value="1" th:field="*{product.productType}"/>企业类
+								<input name="productType" type="radio" th:value="2" th:field="*{product.productType}"/>个人类
+								<font class="hint-font" id="productTypeHint"></font></td>
+			</tr>
+		</tbody>
+	</table>
+	<!-- 所属金融机构 -->
+	<h4 class="contentTitle">所属金融机构</h4>
+	<table class="table table-bordered table-condensed table-product">
+		<tbody>
+			<tr>
+				<th width="18%">所属金融机构&nbsp;&nbsp;<b class="must-hint">*</b></th>
+				<td width="32%">
+					<select data-placeholder="选择类别" class="form-control chosen-select" id="finEntId"
+								tabindex="2" style="width: 100%">
+						<option value="">请选择金融机构</option>
+							<option th:each="p:${insList}" th:value="${p.id}" th:text="${p.insName}"></option>
+					</select>
+					<font class="hint-font" id="finEntIdHint"></font>
+				</td>
+				<th></th>
+				<td></td>
+			</tr>
+			<tr>
+				<th width="18%">机构LOGO&nbsp;&nbsp;<b class="must-hint">*</b></th>
+				<td width="32%"><img id="inslogo" th:src="${product.file}"/></td>
+				<th></th>
+				<td></td>
+			</tr>
+		</tbody>
+	</table>
+	<!-- 产品要素-->
+	<h4 class="contentTitle">产品要素</h4>
+	<table class="table table-bordered table-condensed table-product">
+		<tbody>
+			<tr>
+				<th width="18%">参考最低可贷额度&nbsp;&nbsp;<b class="must-hint">*</b></th>
+				<td width="32%">
+					<input id="minAvailable" name="minAvailable" th:value="${product.minAvailable}"
+										type="text" onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}" 
+										onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}">元
+					<font class="hint-font" id="minAvailableHint"></font>
+				</td>
+				<th width="18%">参考最高可贷额度&nbsp;&nbsp;<b class="must-hint">*</b></th>
+				<td width="32%">
+				  <input id="maxAvailable" name="maxAvailable" th:value="${product.maxAvailable}" type="text"
+				   onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}" 
+				   onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}">元
+					<font class="hint-font" id="maxAvailableHint"></font>
+				</td>
+			</tr>
+			<tr>
+				<th width="18%">参考最低贷款利率&nbsp;&nbsp;<b class="must-hint">*</b></th>
+				<td width="32%">
+					<input id="minRate" name="minRate" th:value="${product.minRate}" type="text"
+					onkeyup="this.value=this.value.replace(/[^\d\.]/g,'')" onblur="if(this.value ==0||!/^\d+(\.\d{1,2})?$/.test(this.value))this.value=''">%（年化）
+					<font class="hint-font" id="minRateHint"></font>
+				</td>
+				<th width="18%">参考最高贷款利率&nbsp;&nbsp;<b class="must-hint">*</b></th>
+				<td width="32%">
+				  <input id="maxRate" name="maxRate" th:value="${product.maxRate}" type="text"
+				  onkeyup="this.value=this.value.replace(/[^\d\.]/g,'')" onblur="if(this.value ==0||!/^\d+(\.\d{1,2})?$/.test(this.value))this.value=''">%（年化）
+				 <input id="maxRateShow" name="maxRateShow" type="checkbox" value="1">前台不展示
+				  <font class="hint-font" id="maxRateHint"></font>
+				</td>
+			</tr>
+			<tr>
+				<th width="18%">参考利率对外描述&nbsp;&nbsp;<b class="must-hint">*</b></th>
+				<td width="32%" colspan="3">
+					<input id="rateDescribing" name="rateDescribing" th:value="${product.rateDescribing}" type="text">
+					<font class="hint-font" id="rateDescribingHint">不超过20个字符/10个中文字</font>
+				</td>
+			</tr>
+			<tr>
+				<th width="18%">最短贷款期限&nbsp;&nbsp;<b class="must-hint">*</b></th>
+				<td width="32%">
+					<input id="minLoanTerm" name="minLoanTerm" th:value="${product.minLoanTerm}" type="text"
+					onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}" 
+				   onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}">个月
+					<input id="minLoanTermShow" name="minLoanTermShow" type="checkbox" value="1">前台不展示
+					 <font class="hint-font" id="minLoanTermHint"></font>
+				</td>
+				<th width="18%">最长贷款期限&nbsp;&nbsp;<b class="must-hint">*</b></th>
+				<td width="32%">
+				  <input id="maxLoanTerm" name="maxLoanTerm" th:value="${product.maxLoanTerm}" type="text"
+				  onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}" 
+				   onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}">个月
+					 <font class="hint-font" id="maxLoanTermHint"></font>
+				</td>
+			</tr>
+			<tr>
+				<th width="18%">适用地区&nbsp;&nbsp;<b class="must-hint">*</b></th>
+				<td width="32%">
+					<select data-placeholder="选择类别" class="form-control chosen-select" id="area"
+								tabindex="2" style="width: 100%">
+						<option value="">请选择产品适用地区</option>
+							<option th:each="p:${applyAreaList}" th:value="${p.value}" th:text="${p.name}" 
+							th:selected="${product.area == p.value}"></option>
+					</select>
+					<font class="hint-font" id="areaHint"></font>
+				</td>
+				<th width="18%">最快放款简述&nbsp;&nbsp;<b class="must-hint">*</b></th>
+				<td width="32%">
+				  <input id="quickRelease" name="quickRelease" th:value="${product.quickRelease}" type="text">
+				  <font class="hint-font" id="quickReleaseHint"></font>
+				</td>
+			</tr>
+			<tr>
+				<th width="18%">还款方式&nbsp;&nbsp;<b class="must-hint">*</b></th>
+				<td width="32%" id="repaymentMethodTd">
+					<!-- <input id="repaymentMethod" name="repaymentMethod" th:value="${product.repaymentMethod}"
+										type="text" disabled> -->
+					<!-- <select data-placeholder="选择类别" class="form-control chosen-select" id="repaymentMethod"
+								tabindex="2" style="width: 100%">
+						<option value="">请选择还款方式</option>
+						<option th:each="p:${paymentMethodList}" th:value="${p.value}" th:text="${p.name}" 
+							th:if="${product.repaymentMethod eq p.value}" th:selected="selected"></option>
+							<option th:each="p:${paymentMethodList}" th:value="${p.value}" th:text="${p.name}" 
+							th:selected="${product.repaymentMethod == p.value}"></option>
+					</select> -->
+					<input name="repaymentMethod" type="checkbox" th:each="p:${paymentMethodList}" th:value="${p.value}" th:text="${p.name}" th:field="*{product.repaymentMethod}"/>
+					<font class="hint-font" id="repaymentMethodHint"></font>
+				</td>
+				<th width="18%">担保方式&nbsp;&nbsp;<b class="must-hint">*</b></th>
+				<td width="32%">
+				  <!-- <select data-placeholder="选择类别" class="form-control chosen-select" id="guaranteeMode"
+								tabindex="2" style="width: 100%">
+						<option value="">请选择担保方式</option>
+						<option th:each="p:${paymentMethodList}" th:value="${p.value}" th:text="${p.name}" 
+							th:if="${product.repaymentMethod eq p.value}" th:selected="selected"></option>
+							<option th:each="p:${guarantyStyleList}" th:value="${p.value}" th:text="${p.name}" 
+							th:selected="${product.guaranteeMode == p.value}"></option>
+					</select> -->
+					<input name="guaranteeMode" type="checkbox" th:each="p:${guarantyStyleList}" th:value="${p.value}" th:text="${p.name}" th:field="*{product.guaranteeMode}"/>
+					<font class="hint-font" id="guaranteeModeHint"></font>	
+				</td>
+			</tr>
+			<tr>
+				<th width="18%">产品审批类型&nbsp;&nbsp;<b class="must-hint">*</b></th>
+				<td width="32%">
+					<input name="approvalType" type="radio" th:value="1" th:field="*{product.approvalType}"/>线上审批
+					<input name="approvalType" type="radio" th:value="2" th:field="*{product.approvalType}"/>线下审批
+					<input name="approvalType" type="radio" th:value="3" th:field="*{product.approvalType}"/>秒批秒贷
+					&nbsp;&nbsp;<font class="hint-font" id="approvalTypeHint"></font>
+				</td>
+				<th width="18%"></th>
+				<td width="32%"></td>
+			</tr>
+		</tbody>
+	</table>
+	
+	<!-- 缩略图概要简介 -->
+	<h4 class="contentTitle">缩略图概要简介</h4>
+	<table class="table table-bordered table-condensed table-product">
+		<tbody>
+			 <tr>
+						<th width="18%">第一行简介&nbsp;&nbsp;<b class="must-hint">*</b></th>
+						<td width="80%">
+							<input id="firstLine" name="firstLine" th:value="${product.firstLine}" type="text">
+							<font class="hint-font" id="firstLineHint"></font>
+						</td>
+			</tr>
+			 <tr>
+					    <th width="18%">第二行简介</th>
+						<td width="80%">
+						   <input id="secondLine" name="secondLine" th:value="${product.secondLine}" type="text">
+						   <font class="hint-font" id="secondLineHint"></font>
+						</td>
+			</tr>
+			<tr>
+					    <th width="18%">第三行简介</th>
+						<td width="80%">
+						   <input id="thirdLine" name="thirdLine" th:value="${product.thirdLine}" type="text">
+						   <font class="hint-font" id="thirdLineHint"></font>
+						</td>
+			</tr>
+		</tbody>
+	</table>
+	
+	<!-- 产品亮点关键词 -->
+	<h4 class="contentTitle">产品亮点关键词</h4>
+	<table class="table table-bordered table-condensed table-product">
+		<tbody>
+			<tr>
+				<th width="18%">亮点关键词1&nbsp;&nbsp;<b class="must-hint">*</b></th>
+				<td width="32%">
+						<input id="keywordsOne" name="keywordsOne" th:value="${product.keywordsOne}" type="text">
+						<font class="hint-font" id="keywordsOneHint"></font>
+				</td>
+				<th width="18%">亮点关键词2</th>
+				<td width="32%">
+					<input id="keywordsTwo" name="keywordsTwo" th:value="${product.keywordsTwo}" type="text">
+					<font class="hint-font" id="keywordsTwoHint"></font>
+				</td>
+			</tr>
+			<tr>
+				<th width="18%">亮点关键词3</th>
+				<td width="32%">
+					<input id="keywordsThree" name="keywordsThree" th:value="${product.keywordsThree}" type="text">
+					<font class="hint-font" id="keywordsThreeHint"></font>
+				</td>
+				<th></th>
+				<td></td>
+			</tr>
+		</tbody>
+	</table>
+	
+	<!-- 产品所属板块 -->
+	<h4 class="contentTitle">产品所属板块</h4>
+	<table class="table table-bordered table-condensed table-product">
+		<tbody>
+			 <tr>
+						<th width="18%">产品所属板块&nbsp;&nbsp;<b class="must-hint">*</b></th>
+						<td width="80%">
+							<!-- <input name="sector" type="radio" th:value="1" th:field="*{product.sector}"/>综合板块
+							<input name="sector" type="radio" th:value="2" th:field="*{product.sector}"/>中小企业板块
+							<input name="sector" type="radio" th:value="3" th:field="*{product.sector}"/>个人经营板块
+							<input name="sector" type="radio" th:value="4" th:field="*{product.sector}"/>个人消费板块 -->
+							<input name="sector" type="checkbox" th:each="p:${palteList}" th:value="${p.value}" th:text="${p.name}" th:field="*{product.sector}"/>
+							<font class="hint-font" id="sectorHint"></font>
+						</td>
+							<font class="hint-font" id="sectorHint"></font>
+			</tr>
+		</tbody>
+	</table>
+	
+	<!-- 产品详情介绍 -->
+	<h4 class="contentTitle">产品详情介绍&nbsp;&nbsp;  <button type="button" class="addPlate">添加板块</button></h4>
+	<font class="hint-font" id="productDet"></font>
+	<div class="showDetailWrap">
+		<div class="showDetail prductDetailsDiv">
+			<p>
+				<span>标题</span>
+				<input type="text" value="" class="keyElementsKey" placeholder="请输入标题">
+				<font class="hint-font"></font>
+				<span class="productMove">
+					<span class="moveUp">上移</span>
+					<span class="moveDown">下移</span>
+					<span class="moveDetele">删除</span>
+				</span>
+			</p>
+			<textarea id="contentTag" class="detailMain" style="width:99.8%;height:300px;"></textarea>	
+			<div style="clear:both;"></div>	
+		</div>
+	</div>
+	
+	
+	<!-- 申请方案配置 -->
+	<h4 class="contentTitle">申请方案配置</h4>
+	<table class="table table-bordered table-condensed table-product">
+		<tbody>
+			 <tr>
+						<th width="18%">选择申请类型&nbsp;&nbsp;<b class="must-hint">*</b></th>
+						<td width="80%">
+							<input name="applicationType" type="radio" th:each="p:${applicationList}" th:value="${p.value}" th:text="${p.name}" th:field="*{product.applicationType}"/>
+							&nbsp;&nbsp;<font class="hint-font" id="applicationTypeHint"></font>
+			</tr>
+			<tr id="erweima">
+						<th width="18%">二维码&nbsp;&nbsp;<b class="must-hint">*</b></th>
+						<td width="80%"><!-- <img th:src="${product.file}"/> -->
+							<div class="col-sm-8">
+									<!-- <input id="advertFile" name="advertFile" class="form-control"
+										type="text"> -->
+										<button type="button" class="layui-btn" id="advertFiles">
+				                            <i class="fa fa-cloud"></i>上传文件
+				                        </button>
+				                        <input id="advertFile" name="advertFile" class="form-control" type="hidden" value="" />
+				                        <div>
+				                        	<img alt="" src="" id="baseFile">
+				                        </div>
+				                       <font class="hint-font" id="qrFileHint"></font>
+							</div>
+						</td>
+							
+			</tr>
+			<tr class="kehujingli">
+						<th width="18%">联系人姓名&nbsp;&nbsp;<b class="must-hint">*</b></th>
+						<td width="80%"><!-- <img th:src="${product.file}"/> -->
+							<input id="contactName" name="contactName" th:value="${product.contactName}" type="text">
+							<font class="hint-font" id="contactNameHint"></font>
+						</td>
+							
+			</tr>
+			<tr class="kehujingli">
+						<th width="18%">联系人电话&nbsp;&nbsp;<b class="must-hint">*</b></th>
+						<td width="80%"><!-- <img th:src="${product.file}"/> -->
+							<input id="contactInf" name="contactInf" th:value="${product.contactInf}" type="text">
+							<font class="hint-font" id="contactInfHint"></font>
+						</td>
+							
+			</tr>
+		</tbody>
+	</table>
+	  
+	
+	<div style="text-align:center;">	
+		<input class="btn btn-primary" type="button" value="保存" onclick="productSave('1')"/>	
+		<input class="btn btn-primary" type="button" value="保存并预览" onclick="productSave('3')"/>
+		<input class="btn btn-primary" type="button" value="取消" onclick="goBack()"/>
+	</div>
+  <br/><br/>
+  </div>
+  
+	<div th:include="include::footer"></div>
+	<script type="text/javascript" src="/js/appjs/business/product/productAdd.js"></script>
+	<script type="text/javascript">
+	   /* kindEditor('${ctx}'); *///插件7367行处设置上传图片写入src的值
+	    KindEditor.options.filterMode = false;
+		KindEditor.ready(function(K) {
+			//window.editor = K.create('#contentTag');
+		     window.editor = K.create('.detailMain',{
+                uploadJson : '/business/editor/imgUpload',//post提交图片的地址，在后台按照往常的上传函数接受即可。
+                allowFileManager : true,
+                items:["undo", "redo", "|", "preview", "template", "code", 
+		               "cut", "copy", "paste", "plainpaste", "wordpaste","|", "justifyleft", "justifycenter",
+		               "justifyright", "justifyfull", "insertorderedlist", "insertunorderedlist", "indent", 
+		               "outdent", "subscript", "superscript", "clearhtml", "quickformat", "selectall", "|", 
+		               "fullscreen", "/", "formatblock", "fontname", "fontsize", "|", "forecolor", "hilitecolor", 
+		               "bold", "italic", "underline", "strikethrough", "lineheight", "removeformat", "|", "image", 
+		               "table", "hr", "emoticons", "baidumap", "pagebreak", 
+		               "anchor", "link", "unlink", "|", "about"],
+                afterUpload:function(data){
+                },
+                afterError : function(str) {
+                    alert('自定义错误信息: ' + str);
+                }
+            }); 
+		});
+		
+		layui.use('upload', function () {
+	        var upload = layui.upload;
+	        //执行实例
+	        var uploadInst = upload.render({
+	            elem: '#advertFiles', //绑定元素
+	            url: '/common/sysFile/uploadBase64', //上传接口
+	            size: 1000,
+	            accept: 'file',
+	            done: function (r) {
+	                layer.msg(r.msg);
+	                $("#baseFile").attr("src", r.base64 );
+	                $("#advertFile").val(r.base64);
+	            },
+	            error: function (r) {
+	                layer.msg(r.msg);
+	            }
+	        });
+	    });
+	</script>
+</body>
+</html>

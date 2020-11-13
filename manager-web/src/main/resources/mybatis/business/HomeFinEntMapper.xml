@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.winchampion.credit.business.dao.HomeFinEntDao">
+
+	<select id="get" resultType="com.winchampion.credit.business.domain.HomeFinEntDO">
+		select `id`
+			,`sort`
+			,`fin_file`
+			,`fin_url`
+			,`create_date`
+			,`create_by`
+			,`update_date`
+			,`update_by`
+			,`del_flag`
+			,`ent_type`
+		from tb_home_fin_ent where id = #{id}
+	</select>
+
+	<select id="list" resultType="com.winchampion.credit.business.domain.HomeFinEntDO">
+		select
+			thfe.id as id,
+			thfe.sort as sort,
+			thfe.fin_file as finFile,
+			thfe.fin_url as finUrl,
+			thfe.create_date as createDate,
+			thfe.create_by as createBy,
+			thfe.update_date as updateDate,
+			thfe.update_by as updateBy,
+			thfe.del_flag as delFlag,
+			thfe.ent_type as entType,
+			su.name as updateByName
+		FROM tb_home_fin_ent thfe
+		LEFT JOIN sys_user su ON su.user_id = thfe.update_by
+        WHERE thfe.`del_flag` = '0' AND thfe.ent_type = #{entType}
+	    ORDER BY thfe.sort DESC,thfe.update_date DESC
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		SELECT count(thfe.id)
+		FROM tb_home_fin_ent thfe
+		LEFT JOIN sys_user su ON su.user_id = thfe.update_by
+        WHERE thfe.`del_flag` = '0' AND thfe.ent_type = #{entType}
+	</select>
+	 
+	<insert id="save" parameterType="com.winchampion.credit.business.domain.HomeFinEntDO">
+		insert into tb_home_fin_ent
+		(
+			`id`, 
+			`sort`,
+			`fin_file`,
+			`fin_url`,
+			`create_date`,
+			`create_by`,
+			`update_date`,
+			`update_by`,
+			`ent_type`,
+			`del_flag`
+		)
+		values
+		(
+			#{id}, 
+			#{sort},
+			#{finFile},
+			#{finUrl},
+			#{createDate},
+			#{createBy},
+			#{updateDate},
+			#{updateBy},
+			#{entType},
+			#{delFlag}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.winchampion.credit.business.domain.HomeFinEntDO">
+		update tb_home_fin_ent
+		<set>
+			<if test="sort != null">`sort` = #{sort}, </if>
+			<if test="finFile != null">`fin_file` = #{finFile}, </if>
+			<if test="finUrl != null">`fin_url` = #{finUrl}, </if>
+			<if test="sort != null">`sort` = #{sort}, </if>
+			<if test="createDate != null">`create_date` = #{createDate}, </if>
+			<if test="createBy != null">`create_by` = #{createBy}, </if>
+			<if test="updateDate != null">`update_date` = #{updateDate}, </if>
+			<if test="updateBy != null">`update_by` = #{updateBy}, </if>
+			<if test="entType != null">`ent_type` = #{entType}, </if>
+			<if test="delFlag != null">`del_flag` = #{delFlag}, </if>
+		</set>
+		WHERE id = #{id}
+	</update>
+
+	<update id="remove">
+		update tb_home_fin_ent set del_flag = '1'
+		where id = #{id}
+	</update>
+</mapper>

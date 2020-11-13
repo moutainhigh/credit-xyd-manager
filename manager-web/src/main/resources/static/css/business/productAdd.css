@@ -1,0 +1,543 @@
+body,html{
+	width: 100%;
+	height: 100%;
+	font-size: 14px;
+	background: #F8F8F8;
+	color: #333;
+	font-family: "微软雅黑";
+}
+
+.navBox{
+	width: 100%;
+	height: 80px;
+	background: #14a296;
+}
+.navLar{
+	width: 1260px;
+	height: 80px;
+	margin: 0 auto;
+}
+
+.navLar h1{
+	float: left;
+	height: 80px;
+	line-height: 80px;
+	color: #fff;
+	font-size: 24px;
+	font-weight: bold;
+	padding-left: 79px;
+	background: url(../images/logo.png) no-repeat 0 10px;
+}
+
+.navLar .navLi{
+	float: left;
+	margin-left: 60px;
+}
+.navLar .navLi li{
+	float: left;
+	padding: 0 20px;
+	margin: 0 5px;
+	height: 80px;
+	line-height: 80px;
+}
+.navLar .navLi li a{
+	font-size: 16px;
+	color: #fff;
+	text-decoration: none;
+}
+.navLar .navLi li.current a{
+	color: #fff;
+}
+.navLar .navLi li a:hover{
+	color: #bff6f1;
+}
+.navLar .navLi li.current{
+	height: 79px;
+	border-bottom: 3px solid #fff;
+}
+
+.navLar .navRight{
+	float: right;
+	height: 60px;
+	margin-top: 20px;
+	margin-right: 20px;
+}
+.navRight .promptBox{
+	width: 38px;
+    height: 44px;
+	float: left;
+	position: relative;
+	background: url(../images/xitongtishi.png);	
+	cursor: pointer;
+}
+.navRight .messagesBox{
+	width: 370px;
+	position: absolute;
+	top: 50px;
+	left: -180px;
+	z-index: 1111;
+	border: 1px solid #056D64;
+	background: #fff;
+	font-size: 12px;
+	display: none;
+}
+.navRight .messagesBox .media-heading{
+	width: 284px;
+	color: #666;
+	margin-left: 20px;
+	font-size: 12px;
+	overflow: hidden;
+    margin-bottom: 10px;
+}
+.navRight .messagesBox .media-heading b{
+	width: 300px;
+	display: inline-block;
+	overflow: hidden;
+	text-overflow:ellipsis;
+}
+.navRight .messagesBox .media-heading i{
+	float: right;
+	color: #999;
+}
+.navRight .messagesBox .media-body p{
+	color: #666;
+	line-height: 34px;
+	width: 284px;
+	overflow: hidden;
+	text-overflow:ellipsis;
+}
+#header .list-group-item{
+	border-radius: 0;
+	padding: 8px 12px;
+}
+.list-group-item.active, .list-group-item.active:hover, .list-group-item.active:focus {
+	color: #fff;
+	background-color: #056D64;
+}
+.messagesBox .active {
+	overflow: hidden;
+	font-size: 14px;
+}
+.messagesBox .active p{
+	float: left;
+	margin: 0;
+}
+i{
+	font-style: normal;
+}
+.messagesBox .active a{
+	float: right;
+	color: #fff;
+}
+.messagesBox .messagesTop{
+	margin-top: 10px;
+}
+.messagesBox .messagesBottom{
+	margin-bottom: 10px;
+}
+.navRight{
+	float:right;
+	margin-right:50px;
+	margin-top: 24px;
+}
+.navRight .personInfoBox{
+	float: left;
+	margin-left: 30px;
+	line-height: 40px;
+	position: relative;
+}
+.navRight .personInfoBox .headPortrait{
+	width: 44px;
+	height: 44px;
+	background: url(../images/morentouxiang-bai.png);
+	float: left;
+}
+.navRight .personInfoBox .navPerson{
+	float: left;
+	margin-left: 16px;
+	cursor: pointer;
+	color: #fff;
+}
+.navRight .personInfoBox .navPerson .caret{
+	margin-left: 10px;
+}
+
+.navRight .personInfoBox .personInfo{
+	width: 140px;
+	position: absolute;
+	top: 50px;
+	left: -10px;
+	display: none;
+}
+.navRight .personInfoBox .personInfo .personInfoT{
+	width: 138px;
+	height: 70px;
+	background: #056D64 url(../images/morentouxiang-bai.png) no-repeat center;
+}
+.navRight .personInfoBox .personInfo .personInfoB{
+	width: 104px;
+	height: 100px;
+	background: #fff;
+	border: 1px solid #056D64;
+	border-top: none;
+	padding: 20px 16px;
+	margin:0;
+}
+.navRight .personInfoBox .personInfo .personInfoB li{
+	overflow: hidden;
+	margin-bottom: 10px;
+	width: 104px;
+}
+.navRight .personInfoBox .personInfo .personInfoB li a{
+	background: #fff;
+}
+.navRight .personInfoBox .personInfo .personInfoB span{
+	float: left;
+}
+.navRight .personInfoBox .personInfo .personInfoB i{
+	float: left;
+	margin-left: 10px;
+	line-height: 24px;
+}
+.navRight .personInfoBox .personInfo .personInfoB i:hover,
+.navRight .personInfoBox .personInfo .personInfoB a:hover{
+	color: #14A296;
+	text-decoration: none;
+}
+
+
+
+
+.modifyPwdBox .control-group{
+	overflow: hidden;
+	margin: 10px 0;
+	border-bottom:none;
+}
+.modifyPwdBox .control-group p{
+	color: #ff0000;
+}
+.modifyPwdBox .control-group label{
+	float: left;
+	width: 110px;
+	margin-right: 20px;
+	text-align: right;
+	line-height: 30px;
+}
+.modifyPwdBox .control-group .controls{
+	float: left;
+}
+.modifyPwdBox .control-group .controls input{
+	border: 1px solid #ccc;
+	width: 220px;
+	height: 30px;
+	line-height: 30px;
+	padding: 0px 8px;
+	border-radius: 4px;
+	box-sizing: border-box;
+}
+.modifyPwdBox .btn-center .controls{
+	margin-left: 132px;
+}
+.required{
+	float: left;
+	color: #ff0000;
+	margin-right: 4px;
+	line-height: 30px;
+}
+.modal .form-horizontal .controls{
+	margin-left:0;
+}
+/*导航栏end*/
+/* 表格 S */
+.tabletr {
+    border-bottom: 1px solid #14A296;
+}
+.tabletr .thtr {
+    cursor: default;
+}
+.tabletr .thtr th {
+    border-top: 1px solid #14A296;
+    border-bottom: 1px solid #14A296;
+    background: #f1f6f9;
+    font-weight: bold;
+    color: #666;
+    text-align: left;
+    padding-left: 40px;
+    box-sizing: border-box;
+    vertical-align: middle;
+}
+.tabletr > tbody > tr > td{
+	padding-left: 40px;
+	vertical-align: middle;
+}
+.tabletr td {
+    color: #333;
+    line-height: 34px;
+    border-bottom: 1px dotted #14A296;
+    text-align: left;
+    padding-left: 40px;
+    box-sizing: border-box;
+    word-break: break-all;
+}
+.tabletr tr:last-child td{
+	border-bottom: 0;
+}
+.table td a{
+	color: #0c736a;
+	cursor: pointer;
+}
+/* 表格 E */
+
+p.promptTitle {
+	color: #14A296;
+    line-height: 24px;
+    background: url(../images/tongji.png) no-repeat 20px 1px;
+    padding-left: 60px;
+    padding-bottom: 10px;
+    margin-bottom: 0;
+}
+
+
+
+
+
+
+
+
+.footerBox{
+	height: 60px;
+	width: 100%;
+	background: #3b393b;
+	position: fixed;
+	left: 0;
+	bottom: 0;
+	z-index: 20;
+}
+.footerLar{
+	width: 1260px;
+	margin: 0 auto;
+	height: 60px;
+	text-align: center;
+	line-height: 60px;
+	color: #fff;
+}
+.classGetBackBox {
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+.classGetBackBox .classGetBack {
+    background: url(../images/classGetBack.png) no-repeat left center;
+    padding-left: 17px;
+    width: 50px;
+    font-size: 14px;
+    font-weight: normal;
+    letter-spacing: normal;
+    line-height: 24px;
+    color: #14A296;
+    float: right;
+    cursor: pointer;
+}
+.returnHeight a{
+	margin-top: 18px;
+}
+/*模态框 S*/
+.modalBg{
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,.3);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#55000000,endColorstr=#55000000); ;
+    z-index: 9999999999;
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: none;
+}
+.modal-content{
+    width: 600px;
+    position: fixed;
+    top: 30%;
+    left: 50%;
+    margin-left: -300px;
+    margin-top: -100px;
+    background: #fff;
+    border-radius: 4px;
+}
+.modal-body {
+    max-height:400px;
+    padding:20px 10px;
+    overflow-y:auto;
+    background: #fff;
+}
+@media (max-height:630px) {
+    .modal-body{
+        max-height:300px;
+    }
+}
+@media (max-height:480px) {
+    .modal-body{
+        max-height:200px;
+    }
+}
+.modal-content .modal-body p{
+    color: #666;
+    line-height: 30px;
+    text-align: center;
+}
+.modal-small{
+    width: 400px;
+    margin-left: -200px;
+}
+.modal-header{
+    font-size: 16px;
+    color: #fff;
+    text-align: center;
+}
+.modal-title,
+.modal-header h4{
+	font-size: 16px;
+}
+.modal-footer{
+    text-align: center;
+}
+
+/*模态框 E*/
+.floatL{
+	float: left;
+}
+.floatR{
+	float: right;
+}
+
+/*资信验证页面，养老保险，公积金等级  */
+.gradeWrap li {
+	padding:10px 0;
+}
+.gradeWrap li .gt{
+	width:13%;
+	float:left;
+	background:#F3F3F3;
+	text-align:center;
+}
+.gradeWrap li .gc{
+	width:87%;
+	float:right;
+}
+.gradeWrap .gc span{
+	display:inline-block;
+	width:24.6%;
+	color:#666;
+	font-size:12px;
+}
+.gradeWrap li .gradeTitle{
+	height:140px;
+	line-height:140px;
+}
+.gradeWrap li .safeTitle{
+	height:40px;
+	line-height:40px;
+}
+.gradeWrap li .moneyTitle{
+	height:300px;
+	line-height:300px;
+}
+/*产品列表页面样式*/
+.operateBtn a{
+	border-left:1px solid #ccc;
+	padding:0 3%;
+}
+.operateBtn a:first-child{
+	border:none;
+}
+.addProduct{
+	padding:0 20px;
+	border-right:1px solid #ccc;
+}
+.recoveryTxt{
+	width:96%;
+	height:100px;
+	resize:none;
+}
+.table .hotOrder{
+	width:86%;
+	margin:0;
+}
+.table b{
+	color:red;
+	position:absolute;
+	right:4px;
+}
+.contentTitle{
+	font-size:14px;
+	color:#333;
+	margin-bottom:8px;
+}
+.table-product{
+	margin-bottom:20px;
+}
+.table-product th{
+	text-align:right;
+	font-weight:normal;
+	padding-right:16px;
+	position:relative;
+}
+.table-product input[type="text"]{
+	width:120px;
+	margin:0;
+}
+.form-product{
+	margin:0;
+}
+.accreditText{
+	height:300px;
+	overflow:auto;
+	border:1px solid #aaa;
+	margin-bottom:20px;
+	padding:10px;
+}
+.showDetail{
+	margin-bottom:20px;
+}
+.showDetail input{
+	margin:0;
+}
+.detailMain{
+	width:99.9%;
+	/* height:300px; */
+}
+.showDetail .ke-container{
+	margin-bottom:30px;
+}
+.tableInput{
+	width:96%;
+}
+.addPlate{
+	padding:4px 20px;
+	border:1px solid #999;
+	background:#fff;
+	border-radius:4px;
+}
+.productMove{
+	float:right;
+}
+.productMove>span{
+	padding:2px 10px;
+	border:1px solid #999;
+	border-radius:4px;
+	cursor:pointer;
+	margin-left:16px;
+}
+a.proBtnLink{
+	color:#fff;	
+}
+a.proBtnLink:hover,a.proBtnLink:focus{
+	text-decoration:none;
+	color:#fff;
+}
+.lodingStyle{
+	color: #fff;
+	background:transparent;
+    font-size: 22px;
+    letter-spacing: 4px;
+    text-align: center;
+    padding-top:120px;
+}

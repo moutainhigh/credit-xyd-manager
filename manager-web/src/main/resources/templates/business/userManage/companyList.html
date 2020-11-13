@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:shiro="http://www.w3.org/1999/xhtml">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content ">
+		<div class="col-sm-12">
+			<div class="ibox">
+				<div class="ibox-body">
+					<div class="fixed-table-toolbar">
+						<div class="pull-left search col-md-2">
+							<input id="cname" type="text" class="form-control"
+								   placeholder="企业名称">
+						</div>
+						<div class="pull-left search col-md-2">
+							<input id="creditCode" type="text" class="form-control"
+								   placeholder="统一社会信用代码">
+						</div>
+						<div class="columns pull-left col-md-2">
+							<select id="isAuthentication" data-placeholder="当前认证状态" class="form-control chosen-select"
+									tabindex="2" style="width: 100%">
+								<option value="">当前认证状态</option>
+								<option value="1">已认证</option>
+								<option value="0">认证过期</option>
+							</select>
+						</div>
+						<div class="pull-left search col-md-2">
+							<input id="customerId" type="text" class="form-control"
+								   placeholder="所属账户">
+						</div>
+						<div class="columns pull-left">
+							<button class="btn btn-success" onclick="reLoad()">查询</button>
+							<button class="btn btn-warning" onclick="cleanInput()">清空</button>
+						</div>
+					</div>
+					<table id="exampleTable" data-mobile-responsive="true">
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--shiro控制bootstraptable行内按钮看见性 来自bootdo的创新方案 -->
+	<div>
+		<script type="text/javascript">
+			var s_edit_h = 'hidden';
+			var s_remove_h = 'hidden';
+			var s_resetPwd_h = 'hidden';
+		</script>
+	</div>
+	<div shiro:hasPermission="business:userManage:companyView">
+		<script type="text/javascript">
+			s_edit_h = '';
+		</script>
+	</div>
+	<div shiro:hasPermission="business:userManage:companyView">
+		<script type="text/javascript">
+			var s_remove_h = '';
+		</script>
+	</div>
+	<div shiro:hasPermission="business:userManage:companyView">
+		<script type="text/javascript">
+			var s_add_h = '';
+		</script>
+	</div>
+
+	</div>
+	<div th:include="include :: footer"></div>
+	<script type="text/javascript"
+		src="/js/appjs/business/userManage/companyList.js?v=20200305011"></script>
+</body>
+</html>

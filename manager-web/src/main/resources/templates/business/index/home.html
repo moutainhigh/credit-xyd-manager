@@ -1,0 +1,180 @@
+<%@ page language="java" contentType="text/html;charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ include file="/WEB-INF/views/include/taglib.jsp" %>
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<meta charset="utf-8">
+<title>首页</title>
+<head th:include="business/index/include_blog::header"></head>
+<html>
+	<head>
+		<meta charset="UTF-8">	
+	    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+	    <meta name="viewport" content="width=device-width, initial-scale=1">
+	    <title>获客平台</title>
+	    <link  rel="stylesheet" href="${ctxStatic}/ylpt/dist/css/slides.css">
+	    <script type="text/javascript" src="${ctxStatic}/assets/js/template-debug.js"></script><!-- 引入模板引擎 -->
+	    <script type="text/javascript" src="${ctxStatic}/ylpt/dist/js/slides.js"></script>
+	    <script type="text/javascript">
+             $(function(){
+            	 var initialId = window.parent.$(".active").attr("id");
+            	 if(initialId != "homePage"){
+            		 window.parent.$("#"+initialId).removeClass("active");
+            		 window.parent.$("#homePage").addClass("active");
+                 }
+            		var ctxStatic = $("#ctxStatic").val();
+            		 $.ajax({
+            		   	  type: "post",
+            		    	 dataType:"",
+            		    	 data:null,
+            		  	     url: "${ctx}/ylpt/product/getProductList",
+            		  	  	 async:false,
+            		  	     success: function(data){
+            		  	    	var list=data;
+            		        	var productList={productList:list,ctxStatic:ctxStatic,productSize:list.length};
+            		        	$("#productsDiv").empty();
+            		            if(list.length=='0'){
+            		            	$("#productListDiv").append(template("productEmptyList",productList));
+            		            	$("#productsDiv").append(template("productEmptyList",productList));
+            		            }else{
+            		            	 $("#productsDiv").append(template("productList",productList)); 
+            		            }
+            		      	  }
+            		});
+
+            		//金额格式化
+ 					$(".priceDeal").each(function(){
+ 						$(this).text(toPrice($(this).text()));
+ 					});
+             });
+
+	    </script>
+	</head>
+	<body>
+	    <input id="ctx" type="hidden" value="${ctx}">
+	    <input id="ctxStatic" type="hidden" value="${ctxStatic}">
+		<main>
+			<!--大屏轮播图-->
+			<div style="width:100%;height:350px;background:url('${ctxStatic}/ylpt/dist/images/focus01.png') no-repeat center center"></div>
+			<!-- <div class="focus">
+			  	<div id="xmSlide" class="xmSlide">			
+			    	<div class="xmSlide_01"></div>			
+			    	<div class="xmSlide_02"></div>			
+			    	<div class="xmSlide_03"></div>
+			  	</div>
+			</div> -->
+			
+			<!--产品展示-->
+			<div class="productShow comWidth">
+				<h4>
+					热门产品
+					<span class="fr"><a href="${ctx}/ylpt/product/getDefaultProducts">更多</a></span>
+				</h4>
+				<!--相关产品-->
+				
+			 <div id="productsDiv"></div>
+				<!--贷款申请步骤-->
+				<img src="${ctxStatic}/ylpt/dist/images/step.png" style="width:100%;margin-bottom:40px;" alt="" />
+			</div>
+		</main>
+		<script type="text/javascript">	
+					
+			$(function(){					
+				$("#xmSlide").xmSlide({			
+					width: 950,			
+					height: 350,			
+					responsiveWidth:710,
+					directionNav: true,			
+					pagination: {			
+						effect: "fade"  //可换成"slide"			
+					},			
+					effect: {			
+						fade: {			
+							speed: 500
+						}			
+					},			
+					play: {			
+						effect: "fade", //可换成"slide"			
+						interval: 5000,			
+						auto: true,			
+						pauseOnHover: true,			
+						restartDelay: 2500			
+					}			
+				});			
+			});		
+		</script>
+		<script id="productList" type="text/tmpl">
+             <ul class="products">
+              {{each productList as product}}
+					<li onclick="productDetils('{{=product.id}}')">
+						<div class="proTitle">
+							<!--<img src="{{=ctxStatic}}/ylpt/dist/images/youchu.png" alt="" />-->
+                            <!--<image src="data:image/png;base64, ${product.productLogo}" style="height:130px;"/>-->
+ 							<div style="display:inline-table;vertical-align:middle;height:32px;padding-right:6px;"><img style="max-width:103px;display:table-cell;max-height:26px;" src="{{=product.organizationLogo}}" alt="" /></div>
+							<span>{{=product.productName}}</span>
+						</div>
+						<p>最高可贷额度</p>
+						<p class="proMoney">
+							<!--<span>{{=product.maxLimit}}</span>-->
+							<span class="priceDeal">{{=product.theHighestLimit}}</span>
+						</p>
+						<div style="height:84px;padding-left:12px;">
+							<table>
+								{{each product.keyElementVos as keyElementVo}}
+								 	{{if (keyElementVo.keyElementsKey != '' && keyElementVo.keyElementsKey != null)||
+									              (keyElementVo.keyElementsValue != '' && keyElementVo.keyElementsValue != null) }}
+										<tr>
+											<th>{{=keyElementVo.keyElementsKey}}：</th>
+											<td>{{=keyElementVo.keyElementsValue}}</td>
+										</tr>
+								  	{{/if}}
+								{{/each}}	
+							</table>
+						</div>
+						<div class="proBtn">
+							<button type="button" class="btn btn-add">立即申请</button>
+						</div>											
+					</li>
+              {{/each}}
+              {{if productSize=='1'}}
+                 <li>
+					<a href="##">
+							<img src="${ctxStatic}/ylpt/dist/images/waiting.png">
+						</a>
+				</li>
+                <li>
+					<a href="##">
+						<img src="${ctxStatic}/ylpt/dist/images/waiting.png">
+					</a>
+				</li>
+              {{/if}}
+              {{if productSize=='2'}}
+                 <li>
+					<a href="##">
+						<img src="${ctxStatic}/ylpt/dist/images/waiting.png">
+					</a>
+				</li>
+              {{/if}}
+           </ul>
+        </script>
+        
+        <script id="productEmptyList" type="text/tmpl">
+                 <ul class="products">
+					<li>
+						<a href="##">
+							<img src="${ctxStatic}/ylpt/dist/images/waiting.png">
+						</a>						
+					</li>
+					<li>
+						<a href="##">
+							<img src="${ctxStatic}/ylpt/dist/images/waiting.png">
+						</a>						
+					</li>
+					<li>
+						<a href="##">
+							<img src="${ctxStatic}/ylpt/dist/images/waiting.png">
+						</a>						
+					</li>
+				</ul>
+        </script>
+	</body>
+</html>

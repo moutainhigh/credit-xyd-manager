@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content ">
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="ibox float-e-margins">
+					<div class="ibox-content">
+						<form class="form-horizontal m-t" id="signupForm">
+							<input id="id" name="id" th:value="${companyFinanceNeeds.id}"
+								type="hidden">
+							<div class="form-group">
+								<h2>企业融资需求信息</h2>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label">需求单号：</label>
+								<div class="col-sm-8 control-label" style="text-align: left;">
+									[[${companyFinanceNeeds.needsNo}]]
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label">帐户名：</label>
+								<div class="col-sm-8 control-label" style="text-align: left;">
+								<a th:href="'/business/userManage/registerAccountDetail/' + ${companyFinanceNeeds.customerDO.id}" th:text="${companyFinanceNeeds.customerDO.customerPhone}"></a>
+									<!-- <input id="needsAmount" name="needsAmount"
+										th:value="${companyFinanceNeeds.customerDO.customerPhone}"
+										class="form-control" type="text" readonly="readonly"><a th:href="'/business/userManage/registerAccountDetail/' + ${companyFinanceNeeds.customerDO.id}">查看</a> -->
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label">姓名：</label>
+								<div class="col-sm-8 control-label" style="text-align: left;">
+									[[${companyFinanceNeeds.customerDO.customerName}]]
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label">融资金额：</label>
+								<div class="col-sm-8 control-label" style="text-align: left;">
+									[[${companyFinanceNeeds.needsAmountDesc}]]
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label">融资期限：</label>
+								<div class="col-sm-8 control-label" style="text-align: left;">
+									[[${companyFinanceNeeds.needsTermDesc}]]
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label">担保方式：</label>
+								<div class="col-sm-8 control-label" style="text-align: left;">
+									[[${companyFinanceNeeds.guaranteeModeDesc}]]
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label">指定发布金融机构：</label>
+								<div class="col-sm-8 control-label" style="text-align: left;">
+									[[${companyFinanceNeeds.pubFinIns}]]
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label">企业信息：</label>
+								<div class="col-sm-8 control-label" style="text-align: left;">
+									[[${companyFinanceNeeds.cname}]]
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label">发布时间：</label>
+								<div class="col-sm-8 control-label" style="text-align: left;">
+									[[${companyFinanceNeeds.releaseDate}]]
+								</div>
+							</div>
+							<div class="form-group">
+								<h2>受理信息</h2>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label">受理状态：</label>
+								<div class="col-sm-8 control-label" style="text-align: left;">
+								[[${companyFinanceNeeds.acceptStatusDes}]]
+										
+									<!-- <input id="acceptStatus" name="acceptStatus"
+										th:value="${companyFinanceNeeds.acceptStatus}"
+										class="form-control" type="text"> -->
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label">受理备注(不对外)：</label>
+								<div class="col-sm-8 control-label" style="text-align: left;">
+									[[${companyFinanceNeeds.acceptRemarks}]]
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label">最后受理时间：</label>
+								<div class="col-sm-8 control-label" style="text-align: left;">
+								[[${companyFinanceNeeds.acceptDate}]]
+										
+									<!-- <input id="acceptStatus" name="acceptStatus"
+										th:value="${companyFinanceNeeds.acceptStatus}"
+										class="form-control" type="text"> -->
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label">最后受理人：</label>
+								<div class="col-sm-8 control-label" style="text-align: left;"  th:if="${companyFinanceNeeds.userDo != null}">
+								[[${companyFinanceNeeds.userDo.name}]]
+										
+									<!-- <input id="acceptStatus" name="acceptStatus"
+										th:value="${companyFinanceNeeds.acceptStatus}"
+										class="form-control" type="text"> -->
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="col-sm-8 col-sm-offset-3">
+									<!-- <button type="submit" class="btn btn-primary">提交</button> -->
+										<a shiro:hasPermission="business:companyFinanceNeeds:edit" class="btn btn-primary" th:href="'/business/companyFinanceNeeds/edit/' + ${companyFinanceNeeds.id}">编辑受理</a>
+										<a class="btn btn-primary" href="/business/companyFinanceNeeds">返回</a>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div th:include="include::footer"></div>
+	<script >
+		
+	</script>
+</body>
+</html>

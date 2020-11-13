@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:shiro="http://www.w3.org/1999/xhtml">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="gray-bg">
+<div class="wrapper wrapper-content ">
+    <div class="col-sm-12">
+        <div class="ibox">
+            <div class="ibox-body">
+                <div id="exampleToolbar" class="fixed-table-toolbar">
+
+                    <label style="margin-right: 5px;" class="columns pull-left">操作日期</label>
+                    <div class="columns pull-left col-md-2 nopadding">
+                        <input id="startTime" type="text" class="form-control" readonly="readonly">
+                    </div>
+                    <label style="margin-left: 5px;margin-right: 5px;" class="columns pull-left">账户名</label>
+                    <div class="columns pull-left col-md-2 nopadding ">
+                        <input id="userName" type="text" class="form-control"
+                               placeholder="账户名">
+                    </div>
+                    <label style="margin-left: 5px;margin-right: 5px;" class="columns pull-left">是否上报</label>
+                    <div class="columns pull-left col-md-2 nopadding ">
+                        <select data-placeholder="选择类别" class="form-control chosen-select" id="acceptStatus"
+                                tabindex="2" style="width: 100%">
+                            <option value="0">全部</option>
+                            <option value="1">是</option>
+                            <option value="2">否</option>
+                        </select>
+                    </div>
+
+                    <div style="margin-left: 5px;" class="columns pull-left">
+
+                        <button shiro:hasPermission="business:homeProductEdit:edit" type="button"
+                                class="btn  btn-primary" onclick="reLoad()">
+                            <!--<i class="fa fa-plus" aria-hidden="true"></i>-->
+                            查询
+                        </button>
+                        <button shiro:hasPermission="business:homeProductEdit:edit" type="button"
+                                class="btn  btn-primary" onclick="downloadNewModel()">
+                            <!--<i class="fa fa-plus" aria-hidden="true"></i>-->
+                            下载模板
+                        </button>
+
+                        <!--<input id="fileSelect" type="file" name="excelFile"
+                                accept=".xls,.xlsx" style="margin-top: 6px"/>-->
+                        <button shiro:hasPermission="business:homeProductEdit:edit" type="button"
+                                class="btn  btn-primary" onclick="openUploadModel()">
+                            <!--<i class="fa fa-plus" aria-hidden="true"></i>-->
+                            上传文件并上报
+                        </button>
+<!--                        <button shiro:hasPermission="business:homeProductEdit:edit" type="button"-->
+<!--                                class="btn  btn-primary" onclick="downloadNewModel()">-->
+<!--                            &lt;!&ndash;<i class="fa fa-plus" aria-hidden="true"></i>&ndash;&gt;-->
+<!--                            下载模板-->
+<!--                        </button>-->
+
+<!--                            &lt;!&ndash;<input id="fileSelect" type="file" name="excelFile"-->
+<!--                                    accept=".xls,.xlsx" style="margin-top: 6px"/>&ndash;&gt;-->
+<!--                            <button shiro:hasPermission="business:homeProductEdit:edit" type="button"-->
+<!--                                    class="btn  btn-primary" onclick="openUploadModel()">-->
+<!--                                &lt;!&ndash;<i class="fa fa-plus" aria-hidden="true"></i>&ndash;&gt;-->
+<!--                                上传文件并上报-->
+<!--                            </button>-->
+                    </div>
+
+                    <div class="columns pull-right">
+                        <button shiro:hasPermission="business:homeProductEdit:edit" type="hidden"
+                                class="btn  btn-primary" onclick="downloadNewModel()">
+
+                            下载模板
+                        </button>
+
+
+                        <button shiro:hasPermission="business:homeProductEdit:edit" type="hidden"
+                                class="btn  btn-primary" onclick="openUploadModel()">
+
+                            上传文件并上报
+                        </button>
+                    </div>
+                </div>
+                <input id="entType" th:value="${entType}" type="hidden">
+                <table id="exampleTable" data-mobile-responsive="true">
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<div th:include="include :: footer"></div>
+<script type="text/javascript" src="/js/laydate/laydate.js"></script>
+<script type="text/javascript">
+    // var startDate = new Date();
+    laydate.render({
+        elem: '#startTime',//绑定元素
+        // value: startDate
+    });
+</script>
+<script type="text/javascript"
+        src="/js/appjs/business/reportingCountry/uploadReportingList.js?v=20201028005"></script>
+</body>
+</html>

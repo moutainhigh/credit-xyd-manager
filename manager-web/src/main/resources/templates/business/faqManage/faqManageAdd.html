@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<script type="text/javascript" src="/js/kindeditor/kindeditor-all.js"></script>
+<!-- 上传图片所用的css -->
+ <link href="/css/layui.css" rel="stylesheet">
+ <style type="text/css">
+ .must-hint{
+ 	color:red;
+ }
+</style>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content ">
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="ibox float-e-margins">
+					<div class="ibox-content">
+						<form class="form-horizontal m-t" id="advertForm">
+							<div class="form-group">	
+								<label class="col-sm-3 control-label">常见问题标题<b class="must-hint">*</b></label>
+								<div class="col-sm-8">
+									<input id="faqTitle" name="faqTitle" class="form-control" type="text">
+								</div>
+							</div>
+							<div class="form-group">	
+								<label class="col-sm-3 control-label">排序优先级<b class="must-hint">*</b></label>
+								<div class="col-sm-8">
+									<input id="sort" name="sort" class="form-control" type="text"
+									onkeyup="value=value.replace(/[^\-?\d]/g,'')">
+								</div>
+							</div>
+							<div class="form-group">	
+								<label class="col-sm-3 control-label">常见问题内容<b class="must-hint">*</b></label>
+								<div class="col-sm-8">
+									<textarea id="faqContent" class="detailMain" style="width:99.8%;height:300px;"></textarea>	
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="col-sm-8 col-sm-offset-3">
+									<button type="button" class="btn btn-primary" onclick="save()">保存</button>
+									<button type="button" class="btn btn-primary" onclick="goBack()">取消</button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+	</div>
+	</div>
+	<div th:include="include::footer"></div>
+	<script type="text/javascript" src="/js/appjs/business/faqManage/faqManageAdd.js"></script>
+	<script type="text/javascript">
+	   /* kindEditor('${ctx}'); *///插件7367行处设置上传图片写入src的值
+	    KindEditor.options.filterMode = false;
+		KindEditor.ready(function(K) {
+			//window.editor = K.create('#contentTag');
+		     window.editor = K.create('.detailMain',{
+                uploadJson : '/business/editor/imgUpload',//post提交图片的地址，在后台按照往常的上传函数接受即可。
+                allowFileManager : true,
+                items:["undo", "redo", "|", "preview", "template", "code", 
+		               "cut", "copy", "paste", "plainpaste", "wordpaste","|", "justifyleft", "justifycenter",
+		               "justifyright", "justifyfull", "insertorderedlist", "insertunorderedlist", "indent", 
+		               "outdent", "subscript", "superscript", "clearhtml", "quickformat", "selectall", "|", 
+		               "fullscreen", "/", "formatblock", "fontname", "fontsize", "|", "forecolor", "hilitecolor", 
+		               "bold", "italic", "underline", "strikethrough", "lineheight", "removeformat", "|", "image", 
+		               "table", "hr", "emoticons", "baidumap", "pagebreak", 
+		               "anchor", "link", "unlink", "|", "about"],
+                afterUpload:function(data){
+                },
+                afterError : function(str) {
+                    alert('自定义错误信息: ' + str);
+                }
+            }); 
+		});
+	</script>
+</body>
+</html>

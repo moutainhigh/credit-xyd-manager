@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<style type="text/css">
+ .must-hint{
+ 	color:red;
+ }
+</style>
+<body class="gray-bg">
+  <div style="padding-left: 20px;">
+  	<input id="productNo" name="productNo" th:value="${product.productNo}" type="hidden">
+	<input id="productId" name="productId" th:value="${product.id}" type="hidden">
+		<div style="float:right">
+			<!-- <a th:if="${product.isRelease eq '0'}" target="_blank" class="btn btn-primary proBtnLink" href="#"
+			 	onclick="issue()" id="issueB">发布</a>&nbsp;&nbsp;	 -->
+			<input class="btn btn-primary" type="button" value="样式预览" onclick="productPreview()"/>&nbsp;&nbsp;
+			<input class="btn btn-primary" type="button" value="编辑" onclick="editProduct()"/>&nbsp;&nbsp;
+			<input class="btn btn-primary" type="button" value="返回" onclick="goBack()"/>
+		</div>
+		<div style="clear:both"></div>
+	<!--产品信息  -->
+	<h4 class="contentTitle">产品信息</h4>
+	<table class="table table-bordered table-condensed table-product">
+		<tbody>
+			<tr>
+				<th width="18%">产品名称&nbsp;&nbsp;<b class="must-hint">*</b></th>
+				<td width="32%">[[${product.productName}]]</td>
+				<th width="18%">产品类型&nbsp;&nbsp;<b class="must-hint">*</b></th>
+				<td width="32%"><input name="productType" type="radio" th:value="1" th:field="*{product.productType}" disabled="disabled"/>企业类
+								<input name="productType" type="radio" th:value="2" th:field="*{product.productType}" disabled="disabled"/>个人类</td>
+			</tr>
+			<tr>
+				<th>产品编号</th>
+				<td>[[${product.productNo}]]</td>
+				<th></th>
+				<td></td>
+			</tr>
+		</tbody>
+	</table>
+	<!-- 所属金融机构 -->
+	<h4 class="contentTitle">所属金融机构</h4>
+	<table class="table table-bordered table-condensed table-product">
+		<tbody>
+			<tr>
+				<th width="18%">所属金融机构名称&nbsp;&nbsp;<b class="must-hint">*</b></th>
+				<td width="32%">[[${product.insName}]]</td>
+				<th></th>
+				<td></td>
+			</tr>
+			<tr>
+				<th width="18%">机构LOGO&nbsp;&nbsp;<b class="must-hint">*</b></th>
+				<td width="32%"><img th:src="${product.file}"/></td>
+				<th></th>
+				<td></td>
+			</tr>
+		</tbody>
+	</table>
+	<!-- 产品要素-->
+	<h4 class="contentTitle">产品要素</h4>
+	<table class="table table-bordered table-condensed table-product">
+		<tbody>
+			<tr>
+				<th width="18%">参考最低可贷额度&nbsp;&nbsp;<b class="must-hint">*</b></th>
+				<td width="32%">
+					<input id="minAvailable" name="minAvailable" th:value="${product.minAvailable}"
+										type="text" disabled>元
+				</td>
+				<th width="18%">参考最高可贷额度&nbsp;&nbsp;<b class="must-hint">*</b></th>
+				<td width="32%">
+				  <input id="maxAvailable" name="maxAvailable" th:value="${product.maxAvailable}"
+										type="text" disabled>元
+				</td>
+			</tr>
+			<tr>
+				<th width="18%">参考最低贷款利率&nbsp;&nbsp;<b class="must-hint">*</b></th>
+				<td width="32%">
+					<input id="minRate" name="minRate" th:value="${product.minRate}"
+										type="text" disabled>%（年化）
+				</td>
+				<th width="18%">参考最高贷款利率&nbsp;&nbsp;<b class="must-hint">*</b></th>
+				<td width="32%">
+				  <input id="maxRate" name="maxRate" th:value="${product.maxRate}"
+										type="text" disabled>%（年化）
+				 <input id="maxRateShow" name="maxRateShow" type="checkbox" value="1" 
+				 th:field="*{product.maxRateShow}" checked="checked" disabled="disabled" >前台不展示
+				</td>
+			</tr>
+			<tr>
+				<th width="18%">参考利率对外描述&nbsp;&nbsp;<b class="must-hint">*</b></th>
+				<td width="32%" colspan="3">
+					<input id="rateDescribing" name="rateDescribing" th:value="${product.rateDescribing}" type="text" disabled>
+					<font class="hint-font" id="rateDescribingHint">不超过20个字符/10个中文字</font>
+				</td>
+			</tr>
+			<tr>
+				<th width="18%">最短贷款期限&nbsp;&nbsp;<b class="must-hint">*</b></th>
+				<td width="32%">
+					<input id="minLoanTerm" name="minLoanTerm" th:value="${product.minLoanTerm}"
+										type="text" disabled>个月
+					<input id="minLoanTermShow" name="minLoanTermShow" type="checkbox" value="1" 
+				 	th:field="*{product.minLoanTermShow}" checked="checked" disabled="disabled">前台不展示
+				</td>
+				<th width="18%">最长贷款期限&nbsp;&nbsp;<b class="must-hint">*</b></th>
+				<td width="32%">
+				  <input id="maxLoanTerm" name="maxLoanTerm" th:value="${product.maxLoanTerm}"
+										type="text" disabled>个月
+				</td>
+			</tr>
+			<tr>
+				<th width="18%">适用地区&nbsp;&nbsp;<b class="must-hint">*</b></th>
+				<td width="32%">
+					<select data-placeholder="选择类别" class="form-control chosen-select" id="area"
+								tabindex="2" style="width: 100%">
+						<option value="" disabled="disabled">请选择产品适用地区</option>
+							<option th:each="p:${applyAreaList}" th:value="${p.value}" th:text="${p.name}" 
+							th:selected="${product.area == p.value}" disabled="disabled"></option>
+					</select>
+				</td>
+				<th width="18%">最快放款简述&nbsp;&nbsp;<b class="must-hint">*</b></th>
+				<td width="32%">
+				  <input id="quickRelease" name="quickRelease" th:value="${product.quickRelease}"
+										type="text" disabled>
+				</td>
+			</tr>
+			<tr>
+				<th width="18%">还款方式&nbsp;&nbsp;<b class="must-hint">*</b></th>
+				<td width="32%" id="repaymentMethodTd">
+					<!-- <input id="repaymentMethod" name="repaymentMethod" th:value="${product.repaymentMethod}"
+										type="text" disabled> -->
+					<!-- <select data-placeholder="选择类别" class="form-control chosen-select" id="repaymentMethod"
+								tabindex="2" style="width: 100%">
+						<option value="" disabled="disabled">请选择还款方式</option>
+							<option th:each="p:${paymentMethodList}" th:value="${p.value}" th:text="${p.name}" 
+							th:selected="${product.repaymentMethod == p.value}" disabled="disabled"></option>
+					</select> -->
+					<input name="repaymentMethod" type="checkbox" th:each="p:${paymentMethodList}" th:value="${p.value}" th:text="${p.name}"
+							  th:if="${#strings.containsIgnoreCase(product.repaymentMethod,p.value)}" checked="checked" disabled="disabled"/>
+							<input name="repaymentMethod" type="checkbox" th:each="p:${paymentMethodList}" th:value="${p.value}" th:text="${p.name}"
+							  th:if="${!#strings.containsIgnoreCase(product.repaymentMethod,p.value)}" disabled="disabled"/>
+				</td>
+				<th width="18%">担保方式&nbsp;&nbsp;<b class="must-hint">*</b></th>
+				<td width="32%">
+				  <!-- <select data-placeholder="选择类别" class="form-control chosen-select" id="repaymentMethod"
+								tabindex="2" style="width: 100%">
+						<option value="" disabled="disabled">请选择担保方式</option>
+						<option th:each="p:${paymentMethodList}" th:value="${p.value}" th:text="${p.name}" 
+							th:if="${product.repaymentMethod eq p.value}" th:selected="selected"></option>
+							<option th:each="p:${guarantyStyleList}" th:value="${p.value}" th:text="${p.name}" 
+							th:selected="${product.guaranteeMode == p.value}" disabled="disabled"></option>
+					</select>	 -->
+					<input name="guaranteeMode" type="checkbox" th:each="p:${guarantyStyleList}" th:value="${p.value}" th:text="${p.name}"
+							  th:if="${#strings.containsIgnoreCase(product.guaranteeMode,p.value)}" checked="checked" disabled="disabled"/>
+							<input name="guaranteeMode" type="checkbox" th:each="p:${guarantyStyleList}" th:value="${p.value}" th:text="${p.name}"
+							  th:if="${!#strings.containsIgnoreCase(product.guaranteeMode,p.value)}" disabled="disabled"/>
+				</td>
+			</tr>
+			<tr>
+				<th width="18%">产品审批类型&nbsp;&nbsp;<b class="must-hint">*</b></th>
+				<td width="32%">
+					<input name="approvalType" type="radio" th:value="1" th:field="*{product.approvalType}" disabled="disabled"/>线上审批
+					<input name="approvalType" type="radio" th:value="2" th:field="*{product.approvalType}" disabled="disabled"/>线下审批
+					<input name="approvalType" type="radio" th:value="3" th:field="*{product.approvalType}" disabled="disabled"/>秒批秒贷
+				</td>
+				<th width="18%"></th>
+				<td width="32%"></td>
+			</tr>
+		</tbody>
+	</table>
+	
+	<!-- 缩略图概要简介 -->
+	<h4 class="contentTitle">缩略图概要简介</h4>
+	<table class="table table-bordered table-condensed table-product">
+		<tbody>
+			 <tr>
+						<th width="18%">第一行简介&nbsp;&nbsp;<b class="must-hint">*</b></th>
+						<td width="80%">
+							<input id="firstLine" name="firstLine" th:value="${product.firstLine}"
+										type="text" disabled>
+						</td>
+			</tr>
+			 <tr>
+					    <th width="18%">第二行简介</th>
+						<td width="80%">
+						   <input id="secondLine" name="secondLine" th:value="${product.secondLine}"
+										type="text" disabled>
+						</td>
+			</tr>
+			<tr>
+					    <th width="18%">第三行简介</th>
+						<td width="80%">
+						   <input id="thirdLine" name="thirdLine" th:value="${product.thirdLine}"
+										type="text" disabled>
+						</td>
+			</tr>
+		</tbody>
+	</table>
+	
+	<!-- 产品亮点关键词 -->
+	<h4 class="contentTitle">产品亮点关键词</h4>
+	<table class="table table-bordered table-condensed table-product">
+		<tbody>
+			<tr>
+				<th width="18%">亮点关键词1&nbsp;&nbsp;<b class="must-hint">*</b></th>
+				<td width="32%"><input id="keywordsOne" name="keywordsOne" th:value="${product.keywordsOne}"
+										type="text" disabled></td>
+				<th width="18%">亮点关键词2</th>
+				<td width="32%"><input id="keywordsTwo" name="keywordsTwo" th:value="${product.keywordsTwo}"
+										type="text" disabled></td>
+			</tr>
+			<tr>
+				<th width="18%">亮点关键词3</th>
+				<td width="32%"><input id="keywordsThree" name="keywordsThree" th:value="${product.keywordsThree}"
+										type="text" disabled></td>
+				<th></th>
+				<td></td>
+			</tr>
+		</tbody>
+	</table>
+	
+	<!-- 产品所属板块 -->
+	<h4 class="contentTitle">产品所属板块</h4>
+	<table class="table table-bordered table-condensed table-product">
+		<tbody>
+			 <tr>
+						<th width="18%">产品所属板块&nbsp;&nbsp;<b class="must-hint">*</b></th>
+						<td width="80%">
+							<!-- <input name="sector" type="radio" th:each="p:${palteList}" th:value="${p.value}" th:text="${p.name}"
+								 th:field="*{product.sector}" disabled="disabled"/> -->
+							<input name="sector" type="checkbox" th:each="p:${palteList}" th:value="${p.value}" th:text="${p.name}"
+							  th:if="${#strings.containsIgnoreCase(product.sector,p.value)}" checked="checked" disabled="disabled"/>
+							<input name="sector" type="checkbox" th:each="p:${palteList}" th:value="${p.value}" th:text="${p.name}"
+							  th:if="${!#strings.containsIgnoreCase(product.sector,p.value)}" disabled="disabled"/>
+			</tr>
+		</tbody>
+	</table>
+	
+	
+	<!-- 产品详情介绍-->
+	<h4 class="contentTitle">产品详情介绍</h4>
+	
+	<div class="showDetail" th:each="info: ${infoList}">
+			<p>
+				<span>标题</span>
+				<input id="productTitle" name="productTitle" th:value="${info.productTitle}"
+										type="text" disabled>
+			</p>
+			<div class="detailMain" th:utext="${info.info}"></div>
+	</div>
+	
+	<!-- 申请方案配置 -->
+	<h4 class="contentTitle">申请方案配置</h4>
+	<table class="table table-bordered table-condensed table-product">
+		<tbody>
+			 <tr>
+						<th width="18%">选择申请类型&nbsp;&nbsp;<b class="must-hint">*</b></th>
+						<td width="80%">
+							<!-- <input name="applicationType" type="radio" th:value="1" th:field="*{product.applicationType}" disabled="disabled"/>微信扫二维码
+							<input name="applicationType" type="radio" th:value="2" th:field="*{product.applicationType}" disabled="disabled"/>致电客户经理 -->
+							<input name="applicationType" type="radio" th:each="p:${applicationList}" th:value="${p.value}" th:text="${p.name}" 
+							th:field="*{product.applicationType}" disabled="disabled"/>
+							&nbsp;&nbsp;<font class="hint-font" id="applicationTypeHint"></font>
+			</tr>
+			<tr th:if="${product.applicationType eq '2'}">
+						<th width="18%">联系人姓名&nbsp;&nbsp;<b class="must-hint">*</b></th>
+						<td width="80%"><input id="contactName" name="contactName" th:value="${product.contactName}"
+										type="text" disabled></td>
+							
+			</tr>
+			<tr th:if="${product.applicationType eq '2'}">
+						<th width="18%">联系人电话&nbsp;&nbsp;<b class="must-hint">*</b></th>
+						<td width="80%"><input id="contactInf" name="contactInf" th:value="${product.contactInf}"
+										type="text" disabled></td>
+							
+			</tr>
+			<tr th:if="${product.applicationType eq '1'}">
+						<th width="18%">二维码&nbsp;&nbsp;<b class="must-hint">*</b></th>
+						<td width="80%"><img th:src="${product.qrFile}"/></td>
+							
+			</tr>
+		</tbody>
+	</table>
+	  
+	<!-- 产品变更记录 -->
+	<h4 class="contentTitle">产品变更记录</h4>
+	<table id="operateLogTable" data-mobile-responsive="true">
+	</table>
+	
+	<!-- 基础日志-->
+	<h4 class="contentTitle">基础日志</h4>
+	<table class="table table-bordered table-condensed table-product">
+		<tbody>
+			<tr>
+				<th width="18%">创建时间</th>
+				<td width="32%" th:text="${#dates.format(product.createDate, 'yyyy-MM-dd HH:mm')}"></td>
+				<th width="18%">创建人</th>
+				<td width="32%" th:text="${product.createName}"></td>
+			</tr>
+			<tr>
+				<th>最后更新时间</th>
+				<td th:text="${#dates.format(product.updateDate, 'yyyy-MM-dd HH:mm')}"></td>
+				<th>最后更新人</th>
+				<td th:text="${product.createName}"></td>
+			</tr>
+		</tbody>
+	</table>
+	<div style="text-align:center;">	
+		<input class="btn btn-primary" type="button" value="样式预览" onclick="productPreview()"/>&nbsp;&nbsp;
+		<input class="btn btn-primary" type="button" value="编辑" onclick="editProduct()"/>&nbsp;&nbsp;
+		<input class="btn btn-primary" type="button" value="返回" onclick="goBack()"/>			
+	</div>
+  
+  </div>
+  
+	<div th:include="include::footer"></div>
+	<script type="text/javascript" src="/js/appjs/business/product/productDetails.js"></script>
+	<script type="text/javascript">
+	   $(function(){
+		   var productNo = '[[${product.productNo}]]';
+		   load(productNo);
+	   });
+	   function editProduct(){
+		   var id = '[[${product.id}]]';
+		   window.location.href= "/business/product/details/"+id+"/2"; 
+	   }
+	   function productPreview(){
+		   var id = '[[${product.id}]]';
+		   var tempwindow=window.open('_blank');
+  		   tempwindow.location= "/business/product/details/"+id+"/3";
+	   }
+	</script>
+</body>
+</html>

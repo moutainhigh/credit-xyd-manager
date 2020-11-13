@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.winchampion.credit.business.dao.HorseDao">
+
+	<select id="get" resultType="com.winchampion.credit.business.domain.HorseDO">
+		select `ID`,`horse`,`sort`,`is_Release`,`create_date`,`create_by`,`update_date`,`update_by`,`del_flag` from tb_horse where ID = #{value}
+	</select>
+
+	<select id="list" resultType="com.winchampion.credit.business.domain.HorseDO">
+		
+		SELECT
+			tb_horse.id as id,
+			tb_horse.horse as horse,
+			tb_horse.sort as sort,
+			tb_horse.is_release as is_release,
+			tb_horse.create_date as create_date,
+			tb_horse.create_by as create_by,
+			tb_horse.update_date as update_date,
+			tb_horse.update_by as update_by,
+			tb_horse.del_flag as del_flag,
+			sys_user.name as 'updateUserDo.name'
+		FROM
+			tb_horse
+		 left JOIN
+			sys_user on tb_horse.update_by = sys_user.user_id
+			
+        <where>  
+        	tb_horse.del_flag  = '0'
+		  		  <if test="horse != null and horse != ''"> and tb_horse.horse = #{horse} </if>
+		  		  <if test="sort != null and sort != ''"> and tb_horse.sort = #{sort} </if>
+		  		  <if test="isRelease != null and isRelease != ''"> and tb_horse.is_Release = #{isRelease} </if>
+		  		  <if test="createDate != null and createDate != ''"> and tb_horse.create_date = #{createDate} </if>
+		  		  <if test="createBy != null and createBy != ''"> and tb_horse.create_by = #{createBy} </if>
+		  		  <if test="updateDate != null and updateDate != ''"> and tb_horse.update_date = #{updateDate} </if>
+		  		  <if test="updateBy != null and updateBy != ''"> and tb_horse.update_by = #{updateBy} </if>
+		  		</where>
+             order by tb_horse.sort,tb_horse.update_date desc
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from tb_horse
+		 <where>  
+		 del_flag  = '0'
+		  		  <if test="id != null and id != ''"> and ID = #{id} </if>
+		  		  <if test="horse != null and horse != ''"> and horse = #{horse} </if>
+		  		  <if test="sort != null and sort != ''"> and sort = #{sort} </if>
+		  		  <if test="isRelease != null and isRelease != ''"> and is_Release = #{isRelease} </if>
+		  		  <if test="createDate != null and createDate != ''"> and create_date = #{createDate} </if>
+		  		  <if test="createBy != null and createBy != ''"> and create_by = #{createBy} </if>
+		  		  <if test="updateDate != null and updateDate != ''"> and update_date = #{updateDate} </if>
+		  		  <if test="updateBy != null and updateBy != ''"> and update_by = #{updateBy} </if>
+		  		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.winchampion.credit.business.domain.HorseDO">
+		insert into tb_horse
+		(
+			`ID`, 
+			`horse`, 
+			`sort`, 
+			`is_Release`, 
+			`create_date`, 
+			`create_by`, 
+			`update_date`, 
+			`update_by`, 
+			`del_flag`
+		)
+		values
+		(
+			#{id}, 
+			#{horse}, 
+			#{sort}, 
+			#{isRelease}, 
+			#{createDate}, 
+			#{createBy}, 
+			#{updateDate}, 
+			#{updateBy}, 
+			#{delFlag}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.winchampion.credit.business.domain.HorseDO">
+		update tb_horse 
+		<set>
+			<if test="horse != null">`horse` = #{horse}, </if>
+			<if test="sort != null">`sort` = #{sort}, </if>
+			<if test="isRelease != null">`is_Release` = #{isRelease}, </if>
+			<if test="createDate != null">`create_date` = #{createDate}, </if>
+			<if test="createBy != null">`create_by` = #{createBy}, </if>
+			<if test="updateDate != null">`update_date` = #{updateDate}, </if>
+			<if test="updateBy != null">`update_by` = #{updateBy}, </if>
+			<if test="delFlag != null">`del_flag` = #{delFlag}</if>
+		</set>
+		where ID = #{id}
+	</update>
+	
+	<delete id="remove">
+		delete from tb_horse where ID = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from tb_horse where ID in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

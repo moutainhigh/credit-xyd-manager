@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.winchampion.credit.business.dao.HomeProductEditDao">
+
+	<select id="list" resultType="com.winchampion.credit.business.vo.HouseProductEditVo">
+		select
+			tp.id as id,
+			tp.sort as sort,
+			tp.fin_ent_id as insId,
+			tp.product_no as productNo,
+			tp.product_name as productName,
+			tp.is_release as isRelease,
+			tp.update_date as updateDate,
+			tp.update_by as updateBy,
+			su.name as updateByName,
+			ti.ins_name as insName
+		FROM tb_product tp
+		LEFT JOIN tb_ins ti ON ti.id = tp.fin_ent_id
+		LEFT JOIN sys_user su ON su.user_id = tp.update_by
+		<where>
+		 	tp.`del_flag` = '0' and (tp.is_release = '1' or tp.is_release = '2')
+		 	<if test="productType == 0"> AND tp.is_home_hot = '1' </if>
+		 	<if test="productType == 1"> AND tp.is_home_com = '1' </if>
+		 	<if test="productType == 2"> AND tp.is_home_per = '1' </if>
+		</where>
+	    ORDER BY tp.sort DESC,tp.update_date DESC
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(tp.id)
+		FROM tb_product tp
+		LEFT JOIN tb_ins ti ON ti.id = tp.fin_ent_id
+		LEFT JOIN sys_user su ON su.user_id = tp.update_by
+		<where>
+			tp.`del_flag` = '0' and (tp.is_release = '1' or tp.is_release = '2')
+			<if test="productType == 0"> AND tp.is_home_hot = '1' </if>
+			<if test="productType == 1"> AND tp.is_home_com = '1' </if>
+			<if test="productType == 2"> AND tp.is_home_per = '1' </if>
+		</where>
+	</select>
+
+	<select id="releaseProductList" resultType="com.winchampion.credit.business.vo.HouseProductEditVo">
+		select
+			tp.id as id,
+			tp.fin_ent_id as insId,
+			tp.product_no as productNo,
+			tp.product_name as productName,
+			tp.is_release as isRelease,
+			ti.ins_name as insName
+		FROM tb_product tp
+		LEFT JOIN tb_ins ti ON ti.id = tp.fin_ent_id
+		<where>
+			tp.`del_flag` = '0' AND tp.is_release = '1'
+			<if test="productName != null and productName != ''">
+				AND tp.product_name like  concat('%',#{productName},'%')
+			</if>
+			<if test="productType == 0">
+				 AND (tp.product_type = '1' OR tp.product_type = '2')
+				 AND (tp.is_home_hot IS NULL OR tp.is_home_hot != '1')
+			</if>
+			<if test="productType == 1">
+				AND tp.product_type = #{productType}
+			 	AND (tp.is_home_com IS NULL OR tp.is_home_com != '1')
+			</if>
+			<if test="productType == 2">
+				AND tp.product_type = #{productType}
+				AND (tp.is_home_per IS NULL OR tp.is_home_per != '1')
+			</if>
+		</where>
+		ORDER BY tp.update_date DESC
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+
+	<select id="releaseProductCount" resultType="int">
+		select count(tp.id)
+		FROM tb_product tp
+		LEFT JOIN tb_ins ti ON ti.id = tp.fin_ent_id
+		<where>
+			tp.`del_flag` = '0' AND tp.is_release = '1'
+			<if test="productName != null and productName != ''">
+				AND tp.product_name like  concat('%',#{productName},'%')
+			</if>
+			<if test="productType == 0">
+				AND (tp.product_type = '1' OR tp.product_type = '2')
+				AND (tp.is_home_hot IS NULL OR tp.is_home_hot != '1')
+			</if>
+			<if test="productType == 1">
+				AND tp.product_type = #{productType}
+				AND (tp.is_home_com IS NULL OR tp.is_home_com != '1')
+			</if>
+			<if test="productType == 2">
+				AND tp.product_type = #{productType}
+				AND (tp.is_home_per IS NULL OR tp.is_home_per != '1')
+			</if>
+		</where>
+	</select>
+
+	<update id="batchMoveIn">
+		update tb_product
+		<set>
+			<if test="productType == 0"> is_home_hot = '1' </if>
+			<if test="productType == 1"> is_home_com = '1' </if>
+			<if test="productType == 2"> is_home_per = '1' </if>
+		</set>
+		where id in
+		<foreach item="item" collection="productIds" open="(" separator=","
+				 close=")">
+			#{item}
+		</foreach>
+	</update>
+
+	<update id="moveOut">
+		update tb_product
+		<set>
+			<if test="productType == 0"> is_home_hot = '0' </if>
+			<if test="productType == 1"> is_home_com = '0' </if>
+			<if test="productType == 2"> is_home_per = '0' </if>
+		</set>
+		where id = #{id}
+	</update>
+</mapper>

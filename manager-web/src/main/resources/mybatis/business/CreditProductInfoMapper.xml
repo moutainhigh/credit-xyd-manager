@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.winchampion.credit.business.dao.CreditProductInfoDao">
+
+	<select id="get" resultType="com.winchampion.credit.business.domain.CreditProductInfoDO">
+		select `id`,`credit_product_id`,`credit_product_title`,`credit_product_info`,`sort` from tb_credit_product_info where id = #{value}
+	</select>
+
+	<select id="list" resultType="com.winchampion.credit.business.domain.CreditProductInfoDO">
+		select `id`,`credit_product_id`,`credit_product_title`,`credit_product_info`,`sort` from tb_credit_product_info
+        <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="creditProductId != null and creditProductId != ''"> and credit_product_id = #{creditProductId} </if>
+		  		  <if test="creditProductTitle != null and creditProductTitle != ''"> and credit_product_title = #{creditProductTitle} </if>
+		  		  <if test="creditProductInfo != null and creditProductInfo != ''"> and credit_product_info = #{creditProductInfo} </if>
+		  		  <if test="sort != null and sort != ''"> and sort = #{sort} </if>
+		  		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by sort ASC
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from tb_credit_product_info
+		 <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="creditProductId != null and creditProductId != ''"> and credit_product_id = #{creditProductId} </if>
+		  		  <if test="creditProductTitle != null and creditProductTitle != ''"> and credit_product_title = #{creditProductTitle} </if>
+		  		  <if test="creditProductInfo != null and creditProductInfo != ''"> and credit_product_info = #{creditProductInfo} </if>
+		  		  <if test="sort != null and sort != ''"> and sort = #{sort} </if>
+		  		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.winchampion.credit.business.domain.CreditProductInfoDO">
+		insert into tb_credit_product_info
+		(
+			`id`, 
+			`credit_product_id`, 
+			`credit_product_title`, 
+			`credit_product_info`, 
+			`sort`
+		)
+		values
+		(
+			#{id}, 
+			#{creditProductId}, 
+			#{creditProductTitle}, 
+			#{creditProductInfo}, 
+			#{sort}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.winchampion.credit.business.domain.CreditProductInfoDO">
+		update tb_credit_product_info 
+		<set>
+			<if test="creditProductId != null">`credit_product_id` = #{creditProductId}, </if>
+			<if test="creditProductTitle != null">`credit_product_title` = #{creditProductTitle}, </if>
+			<if test="creditProductInfo != null">`credit_product_info` = #{creditProductInfo}, </if>
+			<if test="sort != null">`sort` = #{sort}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="remove">
+		delete from tb_credit_product_info where credit_product_id = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from tb_credit_product_info where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+	
+	<insert id="batchInsert" parameterType="com.winchampion.credit.business.domain.ProductInfoDO">
+		insert into tb_credit_product_info (id,credit_product_id,credit_product_title,credit_product_info,sort)VALUES
+		<foreach collection="list" item="item" index="index" separator=",">
+		(#{item.id},#{item.creditProductId},#{item.creditProductTitle},#{item.creditProductInfo},#{item.sort})
+		</foreach>
+	</insert>
+
+</mapper>

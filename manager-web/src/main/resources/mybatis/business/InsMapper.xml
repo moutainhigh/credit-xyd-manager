@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.winchampion.credit.business.dao.InsDao">
+
+	<select id="get" resultType="com.winchampion.credit.business.domain.InsDO">
+		select `id`,`credit_code`,`ins_name`,`file`,`remark`,`create_date`,`create_by`,`update_date`,`update_by`,`del_flag`,`ins_type`,`credit_info`
+		from tb_ins where id = #{value} and del_flag = '0'
+	</select>
+
+	<select id="list" resultType="com.winchampion.credit.business.domain.InsDO">
+		select `id`,
+		`credit_code`,
+		`ins_name`,
+		`file`,
+		`remark`,
+		`create_date`,
+		`create_by`,
+		`update_date`,
+		`update_by`,
+		`del_flag`,
+		`ins_type`,
+		`credit_info`,
+		su.name as updateUserName
+		from tb_ins ti
+		LEFT JOIN sys_user su ON su.user_id = ti.update_by
+        <where>
+			del_flag = '0'
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="creditCode != null and creditCode != ''"> and credit_code = #{creditCode} </if>
+		  		  <if test="insName != null and insName != ''"> and ins_name = #{insName} </if>
+		  		  <if test="file != null and file != ''"> and file = #{file} </if>
+		  		  <if test="remark != null and remark != ''"> and remark = #{remark} </if>
+		  		  <if test="createDate != null and createDate != ''"> and create_date = #{createDate} </if>
+		  		  <if test="createBy != null and createBy != ''"> and create_by = #{createBy} </if>
+		  		  <if test="updateDate != null and updateDate != ''"> and update_date = #{updateDate} </if>
+		  		  <if test="updateBy != null and updateBy != ''"> and update_by = #{updateBy} </if>
+		  		  <if test="delFlag != null and delFlag != ''"> and del_flag = #{delFlag} </if>
+		  		  <if test="insType != null and insType != ''"> and ins_type = #{insType} </if>
+		  		  <if test="creditInfo != null and creditInfo != ''"> and credit_info = #{creditInfo} </if>
+		  		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from tb_ins
+		 <where>
+			 del_flag = '0'
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="creditCode != null and creditCode != ''"> and credit_code = #{creditCode} </if>
+		  		  <if test="insName != null and insName != ''"> and ins_name = #{insName} </if>
+		  		  <if test="file != null and file != ''"> and file = #{file} </if>
+		  		  <if test="remark != null and remark != ''"> and remark = #{remark} </if>
+		  		  <if test="createDate != null and createDate != ''"> and create_date = #{createDate} </if>
+		  		  <if test="createBy != null and createBy != ''"> and create_by = #{createBy} </if>
+		  		  <if test="updateDate != null and updateDate != ''"> and update_date = #{updateDate} </if>
+		  		  <if test="updateBy != null and updateBy != ''"> and update_by = #{updateBy} </if>
+		  		  <if test="delFlag != null and delFlag != ''"> and del_flag = #{delFlag} </if>
+		  		  <if test="insType != null and insType != ''"> and ins_type = #{insType} </if>
+		  		  <if test="creditInfo != null and creditInfo != ''"> and credit_info = #{creditInfo} </if>
+		  		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.winchampion.credit.business.domain.InsDO">
+		insert into tb_ins
+		(
+			`id`, 
+			`credit_code`, 
+			`ins_name`, 
+			`file`, 
+			`remark`, 
+			`create_date`, 
+			`create_by`, 
+			`update_date`, 
+			`update_by`, 
+			`del_flag`, 
+			`ins_type`, 
+			`credit_info`
+		)
+		values
+		(
+			#{id}, 
+			#{creditCode}, 
+			#{insName}, 
+			#{file}, 
+			#{remark}, 
+			#{createDate}, 
+			#{createBy}, 
+			#{updateDate}, 
+			#{updateBy}, 
+			#{delFlag}, 
+			#{insType}, 
+			#{creditInfo}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.winchampion.credit.business.domain.InsDO">
+		update tb_ins 
+		<set>
+			<if test="creditCode != null">`credit_code` = #{creditCode}, </if>
+			<if test="insName != null">`ins_name` = #{insName}, </if>
+			<if test="file != null">`file` = #{file}, </if>
+			<if test="remark != null">`remark` = #{remark}, </if>
+			<if test="createDate != null">`create_date` = #{createDate}, </if>
+			<if test="createBy != null">`create_by` = #{createBy}, </if>
+			<if test="updateDate != null">`update_date` = #{updateDate}, </if>
+			<if test="updateBy != null">`update_by` = #{updateBy}, </if>
+			<if test="delFlag != null">`del_flag` = #{delFlag}, </if>
+			<if test="insType != null">`ins_type` = #{insType}, </if>
+			<if test="creditInfo != null">`credit_info` = #{creditInfo}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="remove">
+		update tb_ins set del_flag = '1'
+		where id = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from tb_ins where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

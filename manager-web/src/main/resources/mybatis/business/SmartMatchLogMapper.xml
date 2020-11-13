@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.winchampion.credit.business.dao.SmartMatchLogDao">
+
+	<select id="get" resultType="com.winchampion.credit.business.domain.SmartMatchLogDO">
+		select `customer_id`,`id`,`match_type`,`cname`,`needs`,`match_result`,`match_rounds`,`match_date` from tb_smart_match_log where customer_id = #{value}
+	</select>
+
+	<select id="list" resultType="com.winchampion.credit.business.domain.SmartMatchLogDO">
+		select s.`customer_id`,s.`id`,s.`match_type`,s.`cname`,s.`needs`,s.`match_result`,s.`match_rounds`,s.`match_date`,
+		c.customer_name AS 'customerName',c.customer_phone AS 'customerPhone'
+		from tb_smart_match_log s
+		left join tb_customer c on s.customer_id = c.ID
+        <where>  
+		  		  <if test="customerId != null and customerId != ''"> and s.customer_id = #{customerId} </if>
+		  		  <if test="id != null and id != ''"> and s.id = #{id} </if>
+		  		  <if test="matchType != null and matchType != ''"> and s.match_type = #{matchType} </if>
+		  		  <if test="cname != null and cname != ''"> and s.cname = #{cname} </if>
+		  		  <if test="needs != null and needs != ''"> and s.needs = #{needs} </if>
+		  		  <if test="matchResult != null and matchResult != ''"> and s.match_result = #{matchResult} </if>
+		  		  <if test="matchRounds != null and matchRounds != ''"> and s.match_rounds = #{matchRounds} </if>
+		  		  <if test="matchDate != null and matchDate != ''"> and s.match_date = #{matchDate} </if>
+		  		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by s.customer_id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from tb_smart_match_log
+		 <where>  
+		  		  <if test="customerId != null and customerId != ''"> and customer_id = #{customerId} </if>
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="matchType != null and matchType != ''"> and match_type = #{matchType} </if>
+		  		  <if test="cname != null and cname != ''"> and cname = #{cname} </if>
+		  		  <if test="needs != null and needs != ''"> and needs = #{needs} </if>
+		  		  <if test="matchResult != null and matchResult != ''"> and match_result = #{matchResult} </if>
+		  		  <if test="matchRounds != null and matchRounds != ''"> and match_rounds = #{matchRounds} </if>
+		  		  <if test="matchDate != null and matchDate != ''"> and match_date = #{matchDate} </if>
+		  		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.winchampion.credit.business.domain.SmartMatchLogDO">
+		insert into tb_smart_match_log
+		(
+			`customer_id`, 
+			`id`, 
+			`match_type`, 
+			`cname`, 
+			`needs`, 
+			`match_result`, 
+			`match_rounds`, 
+			`match_date`
+		)
+		values
+		(
+			#{customerId}, 
+			#{id}, 
+			#{matchType}, 
+			#{cname}, 
+			#{needs}, 
+			#{matchResult}, 
+			#{matchRounds}, 
+			#{matchDate}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.winchampion.credit.business.domain.SmartMatchLogDO">
+		update tb_smart_match_log 
+		<set>
+			<if test="id != null">`id` = #{id}, </if>
+			<if test="matchType != null">`match_type` = #{matchType}, </if>
+			<if test="cname != null">`cname` = #{cname}, </if>
+			<if test="needs != null">`needs` = #{needs}, </if>
+			<if test="matchResult != null">`match_result` = #{matchResult}, </if>
+			<if test="matchRounds != null">`match_rounds` = #{matchRounds}, </if>
+			<if test="matchDate != null">`match_date` = #{matchDate}</if>
+		</set>
+		where customer_id = #{customerId}
+	</update>
+	
+	<delete id="remove">
+		delete from tb_smart_match_log where customer_id = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from tb_smart_match_log where customer_id in 
+		<foreach item="customerId" collection="array" open="(" separator="," close=")">
+			#{customerId}
+		</foreach>
+	</delete>
+
+</mapper>

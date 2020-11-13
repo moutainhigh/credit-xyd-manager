@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.winchampion.credit.business.dao.CustomerCompanyDao">
+
+	<select id="get" resultType="com.winchampion.credit.business.domain.CustomerCompanyDO">
+		select tcc.ID as id,
+			tcc.company_no as companyNo,
+			tcc.cname as cname,
+			tcc.credit_code as creditCode,
+			tcc.is_authentication as isAuthentication,
+			tcc.create_date as createDate,
+			tcc.create_authentication as createAuthentication,
+			tcc.customer_id as customerId,
+			tc.customer_phone as customerPhone
+		from tb_customer_company tcc
+		LEFT JOIN tb_customer tc ON tc.id = tcc.customer_id
+		where tcc.ID = #{value}
+	</select>
+
+	<select id="list" resultType="com.winchampion.credit.business.domain.CustomerCompanyDO">
+		
+		SELECT
+			tcc.id as id,
+			tcc.company_no as companyNo,
+			tcc.cname as cname,
+			tcc.credit_code as creditCode,
+			tcc.is_authentication as isAuthentication,
+			tcc.create_date as createDate,
+			tcc.create_authentication as createAuthentication,
+			tcc.customer_id as customerId,
+			tc.customer_phone as customerPhone
+		FROM tb_customer_company tcc
+		LEFT JOIN tb_customer tc ON tc.id = tcc.customer_id
+        <where>
+        	<if test="companyNo != null and companyNo != ''"> and tcc.company_no = #{companyNo} </if>
+        	<if test="cname != null and cname != ''"> and tcc.cname = #{cname} </if>
+			<if test="creditCode != null and creditCode != ''"> and tcc.credit_code = #{creditCode} </if>
+			<if test="isAuthentication != null and isAuthentication != ''"> and tcc.is_authentication = #{isAuthentication} </if>
+			<if test="customerId != null and customerId != ''"> and tcc.customer_id = #{customerId} </if>
+		</where>
+		order by tcc.create_authentication desc
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from tb_customer_company tcc
+		<where>
+			<if test="companyNo != null and companyNo != ''"> and tcc.company_no = #{companyNo} </if>
+			<if test="cname != null and cname != ''"> and tcc.cname = #{cname} </if>
+			<if test="creditCode != null and creditCode != ''"> and tcc.credit_code = #{creditCode} </if>
+			<if test="isAuthentication != null and isAuthentication != ''"> and tcc.is_authentication = #{isAuthentication} </if>
+			<if test="customerId != null and customerId != ''"> and tcc.customer_id = #{customerId} </if>
+		</where>
+	</select>
+	
+	<update id="updateIsAuthentication">
+		UPDATE tb_customer_company c
+		set c.is_authentication = '0'
+		WHERE c.id in
+		(SELECT b.id
+		from
+		(select a.`ID`,a.`cname`,a.`credit_code`,a.`is_authentication`,a.`create_date`,a.`create_authentication`,a.`customer_id`,`company_no`,
+				90-DATEDIFF(now(),a.create_authentication) AS 'surplus'
+				from tb_customer_company a
+				LEFT JOIN tb_customer b ON b.id = a.customer_id) b
+				where b.surplus&lt;=0
+		)
+	</update>
+	
+</mapper>

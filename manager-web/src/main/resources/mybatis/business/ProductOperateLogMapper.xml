@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.winchampion.credit.business.dao.ProductOperateLogDao">
+
+	<select id="get" resultType="com.winchampion.credit.business.domain.ProductOperateLogDO">
+		select `id`,`product_id`,`operate`,`operate_date`,`operate_by`,`operate_remark`,`product_type` from tb_product_operate_log where id = #{value}
+	</select>
+
+	<select id="list" resultType="com.winchampion.credit.business.domain.ProductOperateLogDO">
+		select l.`id`,l.`product_id`,l.`operate`,l.`operate_date`,l.`operate_by`,l.`operate_remark`,l.`product_type`,u.name AS 'operateName' 
+		from tb_product_operate_log l
+		LEFT JOIN sys_user u on l.operate_by = u.user_id
+        <where>  
+		  		  <if test="id != null and id != ''"> and l.id = #{id} </if>
+		  		  <if test="productId != null and productId != ''"> and l.product_id = #{productId} </if>
+		  		  <if test="operate != null and operate != ''"> and l.operate = #{operate} </if>
+		  		  <if test="operateDate != null and operateDate != ''"> and l.operate_date = #{operateDate} </if>
+		  		  <if test="operateBy != null and operateBy != ''"> and l.operate_by = #{operateBy} </if>
+		  		  <if test="operateRemark != null and operateRemark != ''"> and l.operate_remark = #{operateRemark} </if>
+		  		  <if test="productType != null and productType != ''"> and l.product_type = #{productType} </if>
+		  		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by l.operate_date desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from tb_product_operate_log
+		 <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="productId != null and productId != ''"> and product_id = #{productId} </if>
+		  		  <if test="operate != null and operate != ''"> and operate = #{operate} </if>
+		  		  <if test="operateDate != null and operateDate != ''"> and operate_date = #{operateDate} </if>
+		  		  <if test="operateBy != null and operateBy != ''"> and operate_by = #{operateBy} </if>
+		  		  <if test="operateRemark != null and operateRemark != ''"> and operate_remark = #{operateRemark} </if>
+		  		  <if test="productType != null and productType != ''"> and product_type = #{productType} </if>
+		  		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.winchampion.credit.business.domain.ProductOperateLogDO">
+		insert into tb_product_operate_log
+		(
+			`id`, 
+			`product_id`, 
+			`operate`, 
+			`operate_date`, 
+			`operate_by`, 
+			`operate_remark`, 
+			`product_type`
+		)
+		values
+		(
+			#{id}, 
+			#{productId}, 
+			#{operate}, 
+			#{operateDate}, 
+			#{operateBy}, 
+			#{operateRemark}, 
+			#{productType}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.winchampion.credit.business.domain.ProductOperateLogDO">
+		update tb_product_operate_log 
+		<set>
+			<if test="productId != null">`product_id` = #{productId}, </if>
+			<if test="operate != null">`operate` = #{operate}, </if>
+			<if test="operateDate != null">`operate_date` = #{operateDate}, </if>
+			<if test="operateBy != null">`operate_by` = #{operateBy}, </if>
+			<if test="operateRemark != null">`operate_remark` = #{operateRemark}, </if>
+			<if test="productType != null">`product_type` = #{productType}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="remove">
+		delete from tb_product_operate_log where id = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from tb_product_operate_log where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

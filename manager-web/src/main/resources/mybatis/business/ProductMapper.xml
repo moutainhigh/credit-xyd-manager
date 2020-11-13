@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.winchampion.credit.business.dao.ProductDao">
+
+	<select id="get" resultType="com.winchampion.credit.business.domain.ProductDO">
+		select p.`id`,p.`product_no`,p.`product_name`,p.`product_type`,p.`fin_ent_id`,p.`is_release`,
+		p.`create_date`,p.`create_by`,p.`update_date`,p.`update_by`,p.`del_flag`,p.`is_home_hot`,p.`is_home_com`,
+		p.`is_home_per`,p.`sort`,p.`min_available`,p.`max_available`,p.`min_rate`,p.`max_rate`,p.`min_loan_term`,
+		p.`max_loan_term`,p.`area`,p.`quick_release`,p.`repayment_method`,p.`guarantee_mode`,p.`approval_type`,
+		p.`first_line`,p.`second_line`,p.`third_line`,p.`keywords_one`,p.`keywords_two`,p.`keywords_three`,p.`sector`,
+		p.`application_type`,p.`qr_file`,p.`contact_inf`,i.ins_name AS 'insName',i.file AS 'file',
+		u.`name` AS 'updateName',u2.`name` AS 'createName',p.`contact_name`,p.`min_loan_term_show` AS 'minLoanTermShow',
+		p.`max_rate_show` AS 'maxRateShow',p.`rate_describing` AS 'rateDescribing'
+		from tb_product p
+		LEFT JOIN tb_ins i ON i.id = p.fin_ent_id
+		LEFT JOIN sys_user u ON p.update_by = u.user_id
+		LEFT JOIN sys_user u2 ON p.create_by = u2.user_id
+		where p.id = #{value}
+	</select>
+
+	<select id="list" resultType="com.winchampion.credit.business.domain.ProductDO">
+		select p.`id`,p.`product_no`,p.`product_name`,p.`product_type`,p.`fin_ent_id`,p.`is_release`,p.`create_date`,
+		p.`create_by`,p.`update_date`,p.`update_by`,p.`del_flag`,p.`is_home_hot`,p.`is_home_com`,p.`is_home_per`,p.`sort`,
+		p.`min_available`,p.`max_available`,p.`min_rate`,p.`max_rate`,p.`min_loan_term`,p.`max_loan_term`,p.`area`,p.`quick_release`,
+		p.`repayment_method`,p.`guarantee_mode`,p.`approval_type`,p.`first_line`,p.`second_line`,p.`third_line`,p.`keywords_one`,
+		p.`keywords_two`,p.`keywords_three`,p.`sector`,p.`application_type`,p.`qr_file`,p.`contact_inf`,p.`contact_name`,
+    	u.`name` AS 'updateName', i.ins_name AS 'insName',p.`min_loan_term_show` AS 'minLoanTermShow',p.`max_rate_show` AS 'maxRateShow',
+    	p.`rate_describing` AS 'rateDescribing'
+		from tb_product p 
+		LEFT JOIN sys_user u ON p.update_by = u.user_id
+		LEFT JOIN tb_ins i ON i.id = p.fin_ent_id
+        <where>  p.`del_flag` = '0'
+		  		  <if test="id != null and id != ''"> and p.id = #{id} </if>
+		  		  <if test="productNo != null and productNo != ''"> and p.product_no = #{productNo} </if>
+		  		  <if test="productName != null and productName != ''"> and p.product_name like concat('%',#{productName},'%')</if>
+		  		  <if test="productType != null and productType != ''"> and p.product_type = #{productType} </if>
+		  		  <if test="finEntId != null and finEntId != ''"> and p.fin_ent_id = #{finEntId} </if>
+		  		  <if test="isRelease != null and isRelease != ''"> and p.is_release = #{isRelease} </if>
+		  		  <if test="createDate != null and createDate != ''"> and p.create_date = #{createDate} </if>
+		  		  <if test="insName != null and insName != ''"> and i.ins_name like concat('%',#{insName},'%') </if>
+		  		  <!-- <if test="createBy != null and createBy != ''"> and create_by = #{createBy} </if>
+		  		  <if test="updateDate != null and updateDate != ''"> and update_date = #{updateDate} </if>
+		  		  <if test="updateBy != null and updateBy != ''"> and update_by = #{updateBy} </if>
+		  		  <if test="delFlag != null and delFlag != ''"> and del_flag = #{delFlag} </if>
+		  		  <if test="isHomeHot != null and isHomeHot != ''"> and is_home_hot = #{isHomeHot} </if>
+		  		  <if test="isHomeCom != null and isHomeCom != ''"> and is_home_com = #{isHomeCom} </if>
+		  		  <if test="isHomePer != null and isHomePer != ''"> and is_home_per = #{isHomePer} </if>
+		  		  <if test="sort != null and sort != ''"> and sort = #{sort} </if>
+		  		  <if test="minAvailable != null and minAvailable != ''"> and min_available = #{minAvailable} </if>
+		  		  <if test="maxAvailable != null and maxAvailable != ''"> and max_available = #{maxAvailable} </if>
+		  		  <if test="minRate != null and minRate != ''"> and min_rate = #{minRate} </if>
+		  		  <if test="maxRate != null and maxRate != ''"> and max_rate = #{maxRate} </if>
+		  		  <if test="minLoanTerm != null and minLoanTerm != ''"> and min_loan_term = #{minLoanTerm} </if>
+		  		  <if test="maxLoanTerm != null and maxLoanTerm != ''"> and max_loan_term = #{maxLoanTerm} </if>
+		  		  <if test="area != null and area != ''"> and area = #{area} </if>
+		  		  <if test="quickRelease != null and quickRelease != ''"> and quick_release = #{quickRelease} </if>
+		  		  <if test="repaymentMethod != null and repaymentMethod != ''"> and repayment_method = #{repaymentMethod} </if>
+		  		  <if test="guaranteeMode != null and guaranteeMode != ''"> and guarantee_mode = #{guaranteeMode} </if>
+		  		  <if test="approvalType != null and approvalType != ''"> and approval_type = #{approvalType} </if>
+		  		  <if test="firstLine != null and firstLine != ''"> and first_line = #{firstLine} </if>
+		  		  <if test="secondLine != null and secondLine != ''"> and Second_line = #{secondLine} </if>
+		  		  <if test="thirdLine != null and thirdLine != ''"> and Third_line = #{thirdLine} </if>
+		  		  <if test="keywordsOne != null and keywordsOne != ''"> and keywords_one = #{keywordsOne} </if>
+		  		  <if test="keywordsTwo != null and keywordsTwo != ''"> and keywords_two = #{keywordsTwo} </if>
+		  		  <if test="keywordsThree != null and keywordsThree != ''"> and keywords_three = #{keywordsThree} </if>
+		  		  <if test="sector != null and sector != ''"> and sector = #{sector} </if>
+		  		  <if test="applicationType != null and applicationType != ''"> and application_type = #{applicationType} </if>
+		  		  <if test="qrFile != null and qrFile != ''"> and qr_file = #{qrFile} </if>
+		  		  <if test="contactInf != null and contactInf != ''"> and contact_inf = #{contactInf} </if> -->
+		  		</where>
+        <choose>
+            <!-- <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when> -->
+			<otherwise>
+               <!--  order by id desc -->
+               order by (case when p.sort is null|| p.sort='' then 99999999999 else p.sort end) ASC
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+	<select id="maxProductNo" resultType="String">
+		select p.`product_no` from tb_product p ORDER BY p.product_no DESC LIMIT 1
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(p.id) from tb_product p 
+		LEFT JOIN sys_user u ON p.update_by = u.user_id
+		LEFT JOIN tb_ins i ON i.id = p.fin_ent_id
+		 <where>  p.`del_flag` = '0'
+		  		  <if test="id != null and id != ''"> and p.id = #{id} </if>
+		  		  <if test="productNo != null and productNo != ''"> and p.product_no = #{productNo} </if>
+		  		  <if test="productName != null and productName != ''"> and p.product_name = #{productName} </if>
+		  		  <if test="productType != null and productType != ''"> and p.product_type = #{productType} </if>
+		  		  <if test="finEntId != null and finEntId != ''"> and p.fin_ent_id = #{finEntId} </if>
+		  		  <if test="isRelease != null and isRelease != ''"> and p.is_release = #{isRelease} </if>
+		  		  <if test="createDate != null and createDate != ''"> and p.create_date = #{createDate} </if>
+		  		  <if test="insName != null and insName != ''"> and i.ins_name = #{insName} </if>
+		  		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.winchampion.credit.business.domain.ProductDO">
+		insert into tb_product
+		(
+			`id`, 
+			`product_no`, 
+			`product_name`, 
+			`product_type`, 
+			`fin_ent_id`, 
+			`is_release`, 
+			`create_date`, 
+			`create_by`, 
+			`update_date`, 
+			`update_by`, 
+			`del_flag`, 
+			`is_home_hot`, 
+			`is_home_com`, 
+			`is_home_per`, 
+			`sort`, 
+			`min_available`, 
+			`max_available`, 
+			`min_rate`, 
+			`max_rate`, 
+			`min_loan_term`, 
+			`max_loan_term`, 
+			`area`, 
+			`quick_release`, 
+			`repayment_method`, 
+			`guarantee_mode`, 
+			`approval_type`, 
+			`first_line`, 
+			`Second_line`, 
+			`Third_line`, 
+			`keywords_one`, 
+			`keywords_two`, 
+			`keywords_three`, 
+			`sector`, 
+			`application_type`, 
+			`qr_file`, 
+			`contact_inf`,
+			`contact_name`,
+			`min_loan_term_show`,
+			`max_rate_show`,
+			`rate_describing`
+		)
+		values
+		(
+			#{id}, 
+			#{productNo}, 
+			#{productName}, 
+			#{productType}, 
+			#{finEntId}, 
+			#{isRelease}, 
+			#{createDate}, 
+			#{createBy}, 
+			#{updateDate}, 
+			#{updateBy}, 
+			#{delFlag}, 
+			#{isHomeHot}, 
+			#{isHomeCom}, 
+			#{isHomePer}, 
+			#{sort}, 
+			#{minAvailable}, 
+			#{maxAvailable}, 
+			#{minRate}, 
+			#{maxRate}, 
+			#{minLoanTerm}, 
+			#{maxLoanTerm}, 
+			#{area}, 
+			#{quickRelease}, 
+			#{repaymentMethod}, 
+			#{guaranteeMode}, 
+			#{approvalType}, 
+			#{firstLine}, 
+			#{secondLine}, 
+			#{thirdLine}, 
+			#{keywordsOne}, 
+			#{keywordsTwo}, 
+			#{keywordsThree}, 
+			#{sector}, 
+			#{applicationType}, 
+			#{qrFile}, 
+			#{contactInf},
+			#{contactName},
+			#{minLoanTermShow},
+			#{maxRateShow},
+			#{rateDescribing}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.winchampion.credit.business.domain.ProductDO">
+		update tb_product 
+		<set>
+			<if test="productName != null">`product_name` = #{productName}, </if>
+			<if test="productType != null">`product_type` = #{productType}, </if>
+			<if test="finEntId != null">`fin_ent_id` = #{finEntId}, </if>
+			<if test="isRelease != null">`is_release` = #{isRelease}, </if>
+			<if test="createDate != null">`create_date` = #{createDate}, </if>
+			<if test="createBy != null">`create_by` = #{createBy}, </if>
+			<if test="updateDate != null">`update_date` = #{updateDate}, </if>
+			<if test="updateBy != null">`update_by` = #{updateBy}, </if>
+			<if test="delFlag != null">`del_flag` = #{delFlag}, </if>
+			<if test="isHomeHot != null">`is_home_hot` = #{isHomeHot}, </if>
+			<if test="isHomeCom != null">`is_home_com` = #{isHomeCom}, </if>
+			<if test="isHomePer != null">`is_home_per` = #{isHomePer}, </if>
+			<if test="minAvailable != null">`min_available` = #{minAvailable}, </if>
+			<if test="maxAvailable != null">`max_available` = #{maxAvailable}, </if>
+			<if test="minRate != null">`min_rate` = #{minRate}, </if>
+			<if test="maxRate != null">`max_rate` = #{maxRate}, </if>
+			<if test="minLoanTerm != null">`min_loan_term` = #{minLoanTerm}, </if>
+			<if test="maxLoanTerm != null">`max_loan_term` = #{maxLoanTerm}, </if>
+			<if test="area != null">`area` = #{area}, </if>
+			<if test="quickRelease != null">`quick_release` = #{quickRelease}, </if>
+			<if test="repaymentMethod != null">`repayment_method` = #{repaymentMethod}, </if>
+			<if test="guaranteeMode != null">`guarantee_mode` = #{guaranteeMode}, </if>
+			<if test="approvalType != null">`approval_type` = #{approvalType}, </if>
+			<if test="firstLine != null">`first_line` = #{firstLine}, </if>
+			<if test="secondLine != null">`Second_line` = #{secondLine}, </if>
+			<if test="thirdLine != null">`Third_line` = #{thirdLine}, </if>
+			<if test="keywordsOne != null">`keywords_one` = #{keywordsOne}, </if>
+			<if test="keywordsTwo != null">`keywords_two` = #{keywordsTwo}, </if>
+			<if test="keywordsThree != null">`keywords_three` = #{keywordsThree}, </if>
+			<if test="sector != null">`sector` = #{sector}, </if>
+			<if test="applicationType != null">`application_type` = #{applicationType}, </if>
+			<if test="qrFile != null">`qr_file` = #{qrFile}, </if>
+			<if test="contactInf != null">`contact_inf` = #{contactInf},</if>
+			<if test="contactInf != null">`contact_name` = #{contactName},</if>
+			<if test="strategyUpdateBy != null">`strategy_update_by` = #{strategyUpdateBy},</if>
+			<if test="strategyUpdateDate != null">`strategy_update_date` = #{strategyUpdateDate},</if>
+			<if test="minLoanTermShow != null">`min_loan_term_show` = #{minLoanTermShow},</if>
+			<if test="maxRateShow != null">`max_rate_show` = #{maxRateShow},</if>
+			<if test="rateDescribing != null">`rate_describing` = #{rateDescribing}</if>
+		</set>
+		<where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="productNo != null and productNo != ''"> and product_no= #{productNo} </if>
+		 </where>
+	</update>
+	
+	<update id="updateSort" parameterType="com.winchampion.credit.business.domain.ProductDO">
+		update tb_product set `sort` = #{sort} 
+		<where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="productNo != null and productNo != ''"> and product_no= #{productNo} </if>
+		 </where>
+	</update>
+	
+	
+	<update id="updateHeat" parameterType="com.winchampion.credit.business.domain.ProductDO">
+		update tb_product  set `heat` = #{heat} 
+		<where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="productNo != null and productNo != ''"> and product_no= #{productNo} </if>
+		 </where>
+	</update>
+	
+	
+	<delete id="remove">
+		delete from tb_product where id = #{value}
+	</delete>
+	
+	<!-- <update id="remove">
+		update tb_product set `del_flag` = '1' where id = #{value}
+	</update> -->
+	
+	<delete id="batchRemove">
+		delete from tb_product where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+	
+	<select id="getProductHeatList" resultType="com.winchampion.credit.business.vo.ProductHeatVo">
+		SELECT
+		    p.id,
+			p.product_no,
+			p.product_name,
+			p.is_release,
+			SUM(CASE l.operate when '1' THEN 0  WHEN '0' THEN 1 END) AS 'examineCount',
+		    SUM(CASE l.operate when '1' THEN 1  WHEN '0' THEN 0 END) AS 'applyForCount'	
+		FROM
+			tb_product p
+			LEFT JOIN tb_product_visit_log l on l.product_id = p.id
+        <where>  p.`del_flag` = '0'
+		  	<if test="startTime != null and startTime != ''"> and DATE_FORMAT(l.visit_date,'%Y-%m-%d')  &gt;=#{startTime}</if>
+			<if test="endTime != null and endTime != ''"> and DATE_FORMAT(l.visit_date,'%Y-%m-%d') &lt;=#{endTime}</if>	  
+		</where>
+		GROUP BY p.id
+		order by (case when p.sort is null|| p.sort='' then 99999999999 else p.sort end) ASC
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>	
+	
+	<select id="countHeat" resultType="int">
+		SELECT COUNT(*) from (
+			select p.id
+		FROM
+			tb_product p
+			LEFT JOIN tb_product_visit_log l on l.product_id = p.id
+		    <where>  p.`del_flag` = '0' 
+		  	 <if test="startTime != null and startTime != ''"> and DATE_FORMAT(l.visit_date,'%Y-%m-%d')  &gt;=#{startTime}</if>
+			<if test="endTime != null and endTime != ''"> and DATE_FORMAT(l.visit_date,'%Y-%m-%d') &lt;=#{endTime}</if>	    
+		  </where>
+		GROUP BY p.id
+		order by (case when p.sort is null|| p.sort='' then 99999999999 else p.sort end) ASC
+		) b
+	</select>
+</mapper>

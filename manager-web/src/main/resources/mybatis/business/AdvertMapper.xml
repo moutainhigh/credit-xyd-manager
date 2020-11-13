@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.winchampion.credit.business.dao.AdvertDao">
+
+	<select id="get" resultType="com.winchampion.credit.business.domain.AdvertDO">
+		select `ID`,`advert_name`,`sort`,`advert_file`,`advert_href`,`is_Release`,`create_date`,`create_by`,`update_date`,`update_by`,`del_flag` from tb_advert where ID = #{value}
+	</select>
+
+	<select id="list" resultType="com.winchampion.credit.business.domain.AdvertDO">
+		SELECT
+			tb_advert.ID as id,
+			tb_advert.advert_name as advert_name,
+			tb_advert.sort as sort,
+			tb_advert.advert_file as advert_file,
+			tb_advert.advert_href as advert_href,
+			tb_advert.is_Release as is_release,
+			tb_advert.create_date as create_date,
+			tb_advert.create_by as create_by,
+			tb_advert.update_date as update_date,
+			tb_advert.update_by as update_by,
+			tb_advert.del_flag del_flag,
+		  sys_user.name as 'updateUserDo.name'
+		FROM
+			tb_advert
+		 left JOIN
+			sys_user on tb_advert.update_by = sys_user.user_id
+        <where>  
+        		tb_advert.del_flag  = '0'
+		  		  <if test="id != null and id != ''"> and tb_advert.ID = #{id} </if>
+		  		  <if test="advertName != null and advertName != ''"> and tb_advert.advert_name = #{advertName} </if>
+		  		  <if test="sort != null and sort != ''"> and tb_advert.sort = #{sort} </if>
+		  		  <if test="advertFile != null and advertFile != ''"> and tb_advert.advert_file = #{advertFile} </if>
+		  		  <if test="advertHref != null and advertHref != ''"> and tb_advert.advert_href = #{advertHref} </if>
+		  		  <if test="isRelease != null and isRelease != ''"> and tb_advert.is_Release = #{isRelease} </if>
+		  		  <if test="createDate != null and createDate != ''"> and tb_advert.create_date = #{createDate} </if>
+		  		  <if test="createBy != null and createBy != ''"> and tb_advert.create_by = #{createBy} </if>
+		  		  <if test="updateDate != null and updateDate != ''"> and tb_advert.update_date = #{updateDate} </if>
+		  		  <if test="updateBy != null and updateBy != ''"> and tb_advert.update_by = #{updateBy} </if>
+		  		</where>
+         order by sort,update_date desc
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from tb_advert
+		 <where>  
+			 	del_flag  = '0'
+		  		  <if test="id != null and id != ''"> and ID = #{id} </if>
+		  		  <if test="advertName != null and advertName != ''"> and advert_name = #{advertName} </if>
+		  		  <if test="sort != null and sort != ''"> and sort = #{sort} </if>
+		  		  <if test="advertFile != null and advertFile != ''"> and advert_file = #{advertFile} </if>
+		  		  <if test="advertHref != null and advertHref != ''"> and advert_href = #{advertHref} </if>
+		  		  <if test="isRelease != null and isRelease != ''"> and is_Release = #{isRelease} </if>
+		  		  <if test="createDate != null and createDate != ''"> and create_date = #{createDate} </if>
+		  		  <if test="createBy != null and createBy != ''"> and create_by = #{createBy} </if>
+		  		  <if test="updateDate != null and updateDate != ''"> and update_date = #{updateDate} </if>
+		  		  <if test="updateBy != null and updateBy != ''"> and update_by = #{updateBy} </if>
+		  		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.winchampion.credit.business.domain.AdvertDO">
+		insert into tb_advert
+		(
+			`ID`, 
+			`advert_name`, 
+			`sort`, 
+			`advert_file`, 
+			`advert_href`, 
+			`is_Release`, 
+			`create_date`, 
+			`create_by`, 
+			`update_date`, 
+			`update_by`, 
+			`del_flag`
+		)
+		values
+		(
+			#{id}, 
+			#{advertName}, 
+			#{sort}, 
+			#{advertFile}, 
+			#{advertHref}, 
+			#{isRelease}, 
+			#{createDate}, 
+			#{createBy}, 
+			#{updateDate}, 
+			#{updateBy}, 
+			#{delFlag}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.winchampion.credit.business.domain.AdvertDO">
+		update tb_advert 
+		<set>
+			<if test="advertName != null">`advert_name` = #{advertName}, </if>
+			<if test="sort != null">`sort` = #{sort}, </if>
+			<if test="advertFile != null">`advert_file` = #{advertFile}, </if>
+			<if test="advertHref != null">`advert_href` = #{advertHref}, </if>
+			<if test="isRelease != null">`is_Release` = #{isRelease}, </if>
+			<if test="createDate != null">`create_date` = #{createDate}, </if>
+			<if test="createBy != null">`create_by` = #{createBy}, </if>
+			<if test="updateDate != null">`update_date` = #{updateDate}, </if>
+			<if test="updateBy != null">`update_by` = #{updateBy}, </if>
+			<if test="delFlag != null">`del_flag` = #{delFlag}</if>
+		</set>
+		where ID = #{id}
+	</update>
+	
+	<delete id="remove">
+		delete from tb_advert where ID = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from tb_advert where ID in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

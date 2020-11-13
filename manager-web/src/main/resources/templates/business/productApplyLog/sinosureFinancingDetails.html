@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<script type="text/javascript" src="/js/kindeditor/kindeditor-all.js"></script>
+<!-- 上传图片所用的css -->
+ <link href="/css/layui.css" rel="stylesheet">
+ <style type="text/css">
+ .must-hint{
+ 	color:red;
+ }
+</style>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content ">
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="ibox float-e-margins">
+					<div class="ibox-content">
+						<form class="form-horizontal m-t" id="advertForm">
+						   <h3>申请基本信息</h3><br/>
+							<div class="form-group">	
+								<label class="col-sm-3 control-label">申请单号</label>
+								<div class="col-sm-8">[[${sinosureFinancing.applyOdd}]]</div>
+							</div>
+							<div class="form-group">	
+								<label class="col-sm-3 control-label">产品名称</label>
+								<div class="col-sm-8">[[${sinosureFinancing.productName}]]</div>
+							</div>
+							<div class="form-group">	
+								<label class="col-sm-3 control-label">所属金融机构</label>
+								<div class="col-sm-8">[[${sinosureFinancing.organizationName}]]</div>
+							</div>
+							<div class="form-group">	
+								<label class="col-sm-3 control-label">申请时间</label>
+								<div class="col-sm-8">[[${sinosureFinancing.applyTime}]]</div>
+							</div>
+						<br/><br/>
+						
+						<h3>银行融资申请表</h3><br/>
+						<div class="form-group">	
+								<label class="col-sm-3 control-label">所属行业</label>
+								<div class="col-sm-8">[[${sinosureFinancing.industry}]]</div>
+						</div>
+						<div class="form-group">	
+								<label class="col-sm-3 control-label">主营业务</label>
+								<div class="col-sm-8">[[${sinosureFinancing.primaryBusiness}]]</div>
+						</div>
+						<div class="form-group">	
+								<label class="col-sm-3 control-label">上年总资产(元)</label>
+								<div class="col-sm-8">[[${sinosureFinancing.lastYearTotalAssets}]]</div>
+						</div>
+						<div class="form-group">	
+								<label class="col-sm-3 control-label">上年资产负债率</label>
+								<div class="col-sm-8">[[${sinosureFinancing.lastYearDebtRatio}]]</div>
+						</div>
+						<div class="form-group">	
+								<label class="col-sm-3 control-label">上年主营业务收入(元)</label>
+								<div class="col-sm-8">[[${sinosureFinancing.lastYearPrimaryIncome}]]</div>
+						</div>
+						<div class="form-group">	
+								<label class="col-sm-3 control-label">上年净利润(元)</label>
+								<div class="col-sm-8">[[${sinosureFinancing.lastYearRetainedProfits}]]</div>
+						</div>
+						<div class="form-group">	
+								<label class="col-sm-3 control-label">员工人数</label>
+								<div class="col-sm-8">[[${sinosureFinancing.numberOfEmployees}]]</div>
+						</div>
+						
+						<br/><br/>
+						
+						<h3>银行信贷合作情况</h3><br/>
+						<div class="form-group">	
+								<label class="col-sm-3 control-label">当前授信银行个数</label>
+								<div class="col-sm-8">[[${sinosureFinancing.creditBankNumber}]]</div>
+						</div>
+						<div class="form-group">	
+								<label class="col-sm-3 control-label">当前授信总金额(元)</label>
+								<div class="col-sm-8">[[${sinosureFinancing.creditAmount}]]</div>
+						</div>
+						<br/><br/>
+						
+						<h3>联系信息</h3><br/>
+						<div class="form-group">	
+								<label class="col-sm-3 control-label">姓名</label>
+								<div class="col-sm-8">[[${sinosureFinancing.name}]]</div>
+						</div>
+						<div class="form-group">	
+								<label class="col-sm-3 control-label">手机</label>
+								<div class="col-sm-8">[[${sinosureFinancing.mobilePhone}]]</div>
+						</div>
+						<div class="form-group">	
+								<label class="col-sm-3 control-label">职务</label>
+								<div class="col-sm-8">[[${sinosureFinancing.duty}]]</div>
+						</div>
+						<div class="form-group">	
+								<label class="col-sm-3 control-label">邮箱</label>
+								<div class="col-sm-8">[[${sinosureFinancing.mailbox}]]</div>
+						</div>
+							
+							<br/>
+							<div class="form-group">
+									<div class="col-sm-8 col-sm-offset-3">
+										<button type="button" class="btn btn-primary" onclick="goBack()">返回</button>
+									</div>
+							 </div>
+						</form>
+					</div>
+				</div>
+			</div>
+	</div>
+	</div>
+	<div th:include="include::footer"></div>
+	<script type="text/javascript">
+		function goBack(){
+			var uRef = document.referrer;
+			window.location.href=uRef;
+		}
+		
+		function customer(){
+			var customerId = $("#customerId").val();
+			 window.location.href= '/business/userManage/registerAccountDetail/'+customerId;
+		}
+	</script>
+</body>
+</html>

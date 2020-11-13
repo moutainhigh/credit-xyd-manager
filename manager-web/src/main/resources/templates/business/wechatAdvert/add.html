@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<!-- 上传图片所用的css -->
+    <link href="/css/layui.css" rel="stylesheet">
+<body class="gray-bg">
+	<div class="wrapper wrapper-content ">
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="ibox float-e-margins">
+					<div class="ibox-content">
+						<form class="form-horizontal m-t" id="wechatAdvertForm">
+							<div class="form-group">	
+								<label class="col-sm-3 control-label">广告图名称：</label>
+								<div class="col-sm-8">
+									<input id="advertName" name="advertName" class="form-control" type="text">
+								</div>
+							</div>
+														<div class="form-group">	
+								<label class="col-sm-3 control-label">排序优先级：</label>
+								<div class="col-sm-8">
+									<input id="sort" name="sort" class="form-control" type="text">
+								</div>
+							</div>
+														<div class="form-group">	
+								<label class="col-sm-3 control-label">广告图：</label>
+								<div class="col-sm-8">
+								<!-- <input id="advertFile" name="advertFile" class="form-control"
+									type="text"> -->
+									<button type="button" class="layui-btn" id="advertFiles">
+			                            <i class="fa fa-cloud"></i>上传文件
+			                        </button>
+			                        <input id="advertFile" name="advertFile" class="form-control" type="hidden" value="" />
+			                        <div>
+			                        	<img alt="" src="" id="baseFile">
+			                        </div>
+								</div>
+							</div>
+														<div class="form-group">	
+								<label class="col-sm-3 control-label">跳转链接：</label>
+								<div class="col-sm-8">
+									<input id="advertHref" name="advertHref" class="form-control" type="text">
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="col-sm-8 col-sm-offset-3">
+									<button type="submit" class="btn btn-primary">提交</button>
+									<a class="btn btn-primary" href="/business/wechatAdvert">返回</a>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+	</div>
+	</div>
+	<div th:include="include::footer"></div>
+	<script type="text/javascript" src="/js/appjs/business/wechatAdvert/add.js">
+	</script>
+	<!-- 全局js -->
+	<!-- 上传图片所用的js -->
+    <script src="/js/layui.js"></script>
+	<script src="/js/plugins/clipboard/clipboard.min.js"></script>
+	<script src="/js/vue.min.js"></script>
+	<script type="text/javascript">
+	    layui.use('upload', function () {
+	        var upload = layui.upload;
+	        //执行实例
+	        var uploadInst = upload.render({
+	            elem: '#advertFiles', //绑定元素
+	            url: '/common/sysFile/uploadBase64', //上传接口
+	            size: 1000,
+	            accept: 'file',
+	            done: function (r) {
+	                layer.msg(r.msg);
+	                $("#baseFile").attr("src", r.base64 );
+	                $("#advertFile").val(r.base64);
+	            },
+	            error: function (r) {
+	                layer.msg(r.msg);
+	            }
+	        });
+	    });
+	
+	    // function changeType(i) {
+	    //     app.type = i;
+	    //     app.offset = 0;
+	    //     app.getData();
+	    // }
+	</script>
+</body>
+</html>

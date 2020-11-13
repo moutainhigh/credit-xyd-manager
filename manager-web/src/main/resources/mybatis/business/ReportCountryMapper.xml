@@ -1,0 +1,457 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.winchampion.credit.business.dao.ReportCountryDao">
+
+    <select id="getNewestQuantity" resultType="com.winchampion.credit.business.domain.UploadQuantityDO">
+        SELECT
+            t.REGISTER_COM_NUM         AS registeredEnterpriseNum,
+            t.GRANT_CREDIT_COM_NUM     AS creditEnterpriseNum,
+            t.LOAN_COM_NUM             AS loanEnterpriseNum,
+            t.CREDIT_LOAN_COM_NUM      AS creditLoanEnterpriseNum,
+            t.FIN_NEED_COM_NUM         AS financingNeedsEnterpriseNum,
+            t.GRANT_CREDIT_MONEY       AS creditAmount,
+            t.GRANT_CREDIT_NUM         AS creditNum,
+            t.LOAN_MONEY               AS loanAmount,
+            t.LOAN_MONEY_NUM           AS loanNum,
+            t.CREDIT_LOAN_MONEY        AS creditLoanAmount,
+            t.CREDIT_LOAN_NUM          AS creditLoanNum,
+            t.FIN_NEED_MONEY           AS financingNeedsAmount,
+            t.FIN_NEED_NUM             AS financingNeedsNum,
+            t.DOCKING_NUM              AS dockingNum,
+            t.OVERDUE_NUM              AS overdueNum,
+            t.LOAN_AVG_RATE            AS averageLendingRate,
+            t.ALL_PROCESS_AVGTIME      AS fullBusinessProcessAveragePeriod,
+            t.GRANT_CREDIT_AVGTIME     AS creditAveragePeriod,
+            t.LOAN_AVGTIME             AS loanAveragePeriod,
+            t.CREDIT_LOAN_AVGTIME      AS creditLoanAveragePeriod,
+            t.YEAR_LOAN_MONEY          AS nearlyYearLoanAmount,
+            t.YEAR_LOAN_MONEY_NUM      AS nearlyYearLoanNum,
+            t.YEAR_LOAN_COM_NUM        AS nearlyYearLoanEnterpriseNum,
+            t.YEAR_CREDIT_LOAN_MONEY   AS nearlyYearCreditLoanAmount,
+            t.YEAR_CREDIT_LOAN_NUM     AS nearlyYearCreditLoanNum,
+            t.YEAR_CREDIT_LOAN_COM_NUM AS nearlyYearCreditLoanEnterpriseNum,
+            t.YEAR_FIN_NEED_MONEY      AS nearlyYearFinancingNeedsAmount,
+            t.YEAR_FIN_NEED_NUM        AS nearlyYearFinancingNeedsNum,
+            t.SETTLEMENT_FIN_NUM       AS settledInFinancialInstitutionNum,
+            t.FIN_PRODUCT_NUM          AS financialProductsNum,
+            t.record_id                As recordId,
+            r.version                  As version
+        FROM
+            tb_upload_quantity t
+                LEFT JOIN tb_upload_record r ON t.RECORD_ID = r.ID
+        ORDER BY
+            r.DATE DESC
+            LIMIT 1
+    </select>
+    <!--获取最新版本的增量数据-->
+    <select id="getNewestIncrement" resultType="com.winchampion.credit.business.domain.UploadIncrementDO">
+        select
+               t.REGISTER_COM_NUM            as registeredEnterpriseNum,
+               t.GRANT_CREDIT_COM_NUM        as creditEnterpriseNum,
+               t.LOAN_COM_NUM                as loanEnterpriseNum,
+               t.CREDIT_LOAN_COM_NUM         as creditLoanEnterpriseNum,
+               t.FINANCING_NEED_COM_NUM      as financingNeedsEnterpriseNum,
+               t.GRANT_CREDIT_MONEY          as creditAmount,
+               t.GRANT_CREDIT_NUM            as creditNum,
+               t.LOAN_MONEY                  as loanAmount,
+               t.LOAN_MONEY_NUM              as loanNum,
+               t.CREDIT_LOAN_MONEY           as creditLoanAmount,
+               t.CREDIT_LOAN_NUM             as creditLoanNum,
+               t.FINANCING_NEED_MONEY        as financingNeedsAmount,
+               t.FINANCING_NEED_NUM          as financingNeedsNum,
+               t.COM_TRADE_CENSUS_INFO       as comTradeCensusInfo,
+               t.TRADE_TYPE_CODE             as tradeTypeCode,
+               t.ALLTRADE_TYPE_REG_COM_NUM   as alltradeTypeRegComNum,
+               t.ALLTRADE_TYPE_GRANT_NUM     as alltradeTypeGrantNum,
+               t.COM_SCALE_TOTAL_INFO        as comScaleTotalInfo,
+               t.SCALE_CODE                  as scaleCode,
+               t.SCALE_REGISTER_COM_NUM      as scaleRegisterComNum,
+               t.SCALE_GRANT_COM_NUM         as scaleGrantComNum,
+               t.COM_REVENUE_REGION_INFO     as comRevenueRegionInfo,
+               t.REVENUE_REGION_CODE         as revenueRegionCode,
+               t.ALLREVENUE_REGISTER_COM_NUM as allrevenueRegisterComNum,
+               t.COM_TAX_REGION_TOTAL_INFO   as comTaxRegionTotalInfo,
+               t.TAX_REGION_CODE             as taxRegionCode,
+               t.ALLTAX_REGION_REGI_COM_NUM  as alltaxRegionRegiComNum,
+               t.SUCC_LOAN_MONREGI_TOT_INFO  as succLoanMonregiTotInfo,
+               t.MONEY_REGION_CODE           as moneyRegionCode,
+               t.ALL_REGION_LOAN_MONEY       as allRegionLoanMoney,
+               t.LOAN_TYPE_TOTAL_INFO        as loanTypeTotalInfo,
+               t.LOAN_TYPE_CODE              as loanTypeCode,
+               t.ALL_TYPE_LOAN_MONEY         as allTypeLoanMoney,
+               t.FIN_MECHA_TOTAL_INFO        as finMechaTotalInfo,
+               t.FIN_MECHA_NAME              as finMechaName,
+               t.ALLFIN_MECHA_LOAN_MONEY     as allfinMechaLoanMoney,
+               t.ALLFIN_MECHA_LOAN_TOTAL     as allfinMechaLoanTotal,
+               t.ALLFIN_MECHA_LOAN_COM_NUM   as allfinMechaLoanComNum,
+               t.ALLFIN_MECHA_ACC_NEED_NUM   as allfinMechaAccNeedNum,
+               t.ALLFIN_MECHA_ACC_NEED_MONY  as allfinMechaAccNeedMony,
+               t.NEED_MONEY_REGION_TOT_INFO  as needMoneyRegionTotInfo,
+               t.MONEY_REGION_CODE2          as moneyRegionCode2,
+               t.ALL_REGION_NEED_MONEY       as allRegionNeedMoney,
+               t.SETTLEMENT_FIN_NUM          as settledInFinancialInstitutionNum,
+               t.SETTLEMENT_FIN_TOTAL_INFO   as settlementFinTotalInfo,
+               t.FIN_TYPE_CODE               as finTypeCode,
+               t.ALL_TYPE_FIN_NUM            as allTypeFinNum,
+               t.FIN_PRODUCT_NUM             as financialProductsNum,
+               t.FIN_PRODUCT_TOTAL_INFO      as finProductTotalInfo,
+               t.PRODUCT_TYPE_CODE           as productTypeCode,
+               t.ALL_TYPE_FINPRODUCT_NUM     as allTypeFinproductNum,
+               t.record_id                   as recordId,
+               r.version                     as version
+        from tb_upload_increment t
+                 left join tb_upload_record r
+                           on t.RECORD_ID = r.ID
+        order by r.DATE desc
+                 limit 1
+    </select>
+    <insert id="addPushDateRecord" parameterType="com.winchampion.credit.business.domain.ReportRecordDo">
+        INSERT INTO tb_report_record (
+            id,
+            type,
+            version,
+            day_status,
+            all_status,
+            date
+        )
+        VALUES
+        (
+            #{id},
+            #{type}, #{version},
+            #{incrementStatus},
+            #{quantityStatus},
+            #{date}
+        )
+
+    </insert>
+
+    <select id="getAllReport" resultType="com.winchampion.credit.business.domain.UploadReportDo">
+        SELECT
+            ut.id as id ,
+            ut.date as date,
+            case
+                when day_status = '1' then '是'
+                else '否'
+                end as dayStatus,
+            case
+                when all_status = '1' then '是'
+                else '否'
+                end as allStatus,
+            case
+                when rr.type = '2' then '日常上报'
+                else u.username
+                end as userName
+        FROM
+            tb_upload_record ut
+                LEFT JOIN tb_report_record rr ON ut.version = rr.version
+                LEFT JOIN sys_user u ON ut.user_id = u.user_id
+        <where>
+            <if test="date != null and date != ''"> and date_format(ut.date,'%Y-%c-%d') = #{date} </if>
+            <if test="userName != null and userName != ''"> and username = #{userName} </if>
+
+        </where>
+        order by ut.date desc
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+
+
+    </select>
+
+    <select id="count" resultType="int">
+        SELECT
+           count(*)
+        FROM
+        tb_upload_record ut
+        LEFT JOIN tb_report_record rr ON ut.version = rr.version
+        LEFT JOIN sys_user u ON ut.user_id = u.user_id
+        <where>
+            <if test="date != null and date != ''"> and date_format(ut.date,'%Y-%c-%d') = #{date} </if>
+            <if test="userName != null and userName != ''"> and username = #{userName} </if>
+
+        </where>
+    </select>
+
+    <!--插入用户上传excel记录-->
+    <insert id="insertUploadRecord" parameterType="com.winchampion.credit.business.domain.UploadDo">
+        insert into tb_upload_record
+        (
+            `id`,
+            `version`,
+            `date`,
+            `user_id`,
+            `file_path`
+        )
+        values
+        (
+            #{id},
+            #{version},
+            #{date},
+            #{userId},
+            #{filePath}
+        )
+    </insert>
+    <!--插入 Excel 增量sheet 数据-->
+    <insert id="insertIncrementRecord" parameterType="com.winchampion.credit.business.domain.UploadIncrementDO">
+        insert into tb_upload_increment
+        (
+            `id`,
+            `register_com_num`,
+            `grant_credit_com_num`,
+            `loan_com_num`,
+            `credit_loan_com_num`,
+            `financing_need_com_num`,
+            `grant_credit_money`,
+            `grant_credit_num`,
+            `loan_money`,
+            `loan_money_num`,
+            `credit_loan_money`,
+            `credit_loan_num`,
+            `financing_need_money`,
+            `financing_need_num`,
+            `com_trade_census_info`,
+            `trade_type_code`,
+            `alltrade_type_reg_com_num`,
+            `alltrade_type_grant_num`,
+            `com_scale_total_info`,
+            `scale_code`,
+            `scale_register_com_num`,
+            `scale_grant_com_num`,
+            `com_revenue_region_info`,
+            `revenue_region_code`,
+            `allrevenue_register_com_num`,
+            `com_tax_region_total_info`,
+            `tax_region_code`,
+            `alltax_region_regi_com_num`,
+            `succ_loan_monregi_tot_info`,
+            `money_region_code`,
+            `all_region_loan_money`,
+            `loan_type_total_info`,
+            `loan_type_code`,
+            `all_type_loan_money`,
+            `fin_mecha_total_info`,
+            `fin_mecha_name`,
+            `allfin_mecha_loan_money`,
+            `allfin_mecha_loan_total`,
+            `allfin_mecha_loan_com_num`,
+            `allfin_mecha_acc_need_num`,
+            `allfin_mecha_acc_need_mony`,
+            `need_money_region_tot_info`,
+            `money_region_code2`,
+            `all_region_need_money`,
+            `settlement_fin_num`,
+            `settlement_fin_total_info`,
+            `fin_type_code`,
+            `all_type_fin_num`,
+            `fin_product_num`,
+            `fin_product_total_info`,
+            `product_type_code`,
+            `all_type_finproduct_num`,
+            `record_id`
+        )
+        values
+        (
+            #{id},
+            #{registeredEnterpriseNum},
+            #{creditEnterpriseNum},
+            #{loanEnterpriseNum},
+            #{creditLoanEnterpriseNum},
+            #{financingNeedsEnterpriseNum},
+            #{creditAmount},
+            #{creditNum},
+            #{loanAmount},
+            #{loanNum},
+            #{creditLoanAmount},
+            #{creditLoanNum},
+            #{financingNeedsAmount},
+            #{financingNeedsNum},
+            #{comTradeCensusInfo},
+            #{tradeTypeCode},
+            #{alltradeTypeRegComNum},
+            #{alltradeTypeGrantNum},
+            #{comScaleTotalInfo},
+            #{scaleCode},
+            #{scaleRegisterComNum},
+            #{scaleGrantComNum},
+            #{comRevenueRegionInfo},
+            #{revenueRegionCode},
+            #{allrevenueRegisterComNum},
+            #{comTaxRegionTotalInfo},
+            #{taxRegionCode},
+            #{alltaxRegionRegiComNum},
+            #{succLoanMonregiTotInfo},
+            #{moneyRegionCode},
+            #{allRegionLoanMoney},
+            #{loanTypeTotalInfo},
+            #{loanTypeCode},
+            #{allTypeLoanMoney},
+            #{finMechaTotalInfo},
+            #{finMechaName},
+            #{allfinMechaLoanMoney},
+            #{allfinMechaLoanTotal},
+            #{allfinMechaLoanComNum},
+            #{allfinMechaAccNeedNum},
+            #{allfinMechaAccNeedMony},
+            #{needMoneyRegionTotInfo},
+            #{moneyRegionCode2},
+            #{allRegionNeedMoney},
+            #{settledInFinancialInstitutionNum},
+            #{settlementFinTotalInfo},
+            #{finTypeCode},
+            #{allTypeFinNum},
+            #{financialProductsNum},
+            #{finProductTotalInfo},
+            #{productTypeCode},
+            #{allTypeFinproductNum},
+            #{recordId}
+        )
+    </insert>
+
+    <!--插入上传的Excel 全量sheet 数据-->
+    <insert id="insertQuantityRecord" parameterType="com.winchampion.credit.business.domain.UploadQuantityDO">
+        insert into tb_upload_quantity
+        (
+            `id`,
+            `register_com_num`,
+            `grant_credit_com_num`,
+            `loan_com_num`,
+            `credit_loan_com_num`,
+            `fin_need_com_num`,
+            `grant_credit_money`,
+            `grant_credit_num`,
+            `loan_money`,
+            `loan_money_num`,
+            `credit_loan_money`,
+            `credit_loan_num`,
+            `fin_need_money`,
+            `fin_need_num`,
+            `docking_num`,
+            `overdue_num`,
+            `loan_avg_rate`,
+            `all_process_avgtime`,
+            `grant_credit_avgtime`,
+            `loan_avgtime`,
+            `credit_loan_avgtime`,
+            `year_loan_money`,
+            `year_loan_money_num`,
+            `year_loan_com_num`,
+            `year_credit_loan_money`,
+            `year_credit_loan_num`,
+            `year_credit_loan_com_num`,
+            `year_fin_need_money`,
+            `year_fin_need_num`,
+            `settlement_fin_num`,
+            `fin_product_num`,
+            `record_id`
+        )
+        values
+        (
+            #{id},
+            #{registeredEnterpriseNum},
+            #{creditEnterpriseNum},
+            #{loanEnterpriseNum},
+            #{creditLoanEnterpriseNum},
+            #{financingNeedsEnterpriseNum},
+            #{creditAmount},
+            #{creditNum},
+            #{loanAmount},
+            #{loanNum},
+            #{creditLoanAmount},
+            #{creditLoanNum},
+            #{financingNeedsAmount},
+            #{financingNeedsNum},
+            #{dockingNum},
+            #{overdueNum},
+            #{averageLendingRate},
+            #{fullBusinessProcessAveragePeriod},
+            #{creditAveragePeriod},
+            #{loanAveragePeriod},
+            #{creditLoanAveragePeriod},
+            #{nearlyYearLoanAmount},
+            #{nearlyYearLoanNum},
+            #{nearlyYearLoanEnterpriseNum},
+            #{nearlyYearCreditLoanAmount},
+            #{nearlyYearCreditLoanNum},
+            #{nearlyYearCreditLoanEnterpriseNum},
+            #{nearlyYearFinancingNeedsAmount},
+            #{nearlyYearFinancingNeedsNum},
+            #{settledInFinancialInstitutionNum},
+            #{financialProductsNum},
+            #{recordId}
+        )
+    </insert>
+    <!--插入Excel 首页展示数据-->
+    <insert id="insertProductStatistics" parameterType="com.winchampion.credit.business.domain.IndexShowDo">
+        insert into temp_product_statistics
+        (
+            `id`,
+            `organ_code`,
+            `month_num`,
+            `start_time`,
+            `end_time`,
+            `statistics_type`,
+            `statistics_count`,
+            `del_flag`
+        )
+        values
+        <foreach collection="list" separator="," item="item" index="index">
+            (
+
+            (SELECT REPLACE(UUID(), '-', '') AS uuid),
+            #{item.mechanismFlag},
+            #{item.month},
+            #{item.startDate},
+            #{item.endDate},
+            #{item.statisticsType},
+            #{item.count},
+            #{item.isDelFlag}
+            )
+        </foreach>
+    </insert>
+
+    <!--下载模板-->
+    <select id="getNewUpload" resultType="com.winchampion.credit.business.domain.UploadDo">
+        SELECT
+            t.id,
+            t.version as version,
+            t.file_path as filePath
+        FROM
+            tb_upload_record t
+        ORDER BY
+            t.date DESC
+            LIMIT 1
+    </select>
+
+    <select id="getDateUpload" resultType="com.winchampion.credit.business.domain.UploadDo">
+        select version,date,t.file_path as filePath
+        from tb_upload_record
+             t
+        where t.date = #{date}
+    </select>
+
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

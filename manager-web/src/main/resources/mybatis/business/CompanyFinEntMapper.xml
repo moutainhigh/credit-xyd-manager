@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.winchampion.credit.business.dao.CompanyFinEntDao">
+
+	<select id="get" resultType="com.winchampion.credit.business.domain.CompanyFinEntDO">
+		select `ID`,`fin_name`,`sort`,`create_date`,`create_by`,`update_date`,`update_by`,`del_flag` from tb_company_fin_ent where ID = #{value}
+	</select>
+
+	<select id="list" resultType="com.winchampion.credit.business.domain.CompanyFinEntDO">
+		SELECT
+	tb_company_fin_ent.id as id,
+	tb_company_fin_ent.fin_name as fin_name,
+	tb_company_fin_ent.sort as sort,
+	tb_company_fin_ent.create_date as create_date,
+	tb_company_fin_ent.create_by as create_by,
+	tb_company_fin_ent.update_date as update_date,
+	tb_company_fin_ent.update_by as update_by,
+	tb_company_fin_ent.del_flag as del_flag,
+		  sys_user.name as 'updateUserDo.name'
+		FROM
+			tb_company_fin_ent
+		left JOIN
+					sys_user on tb_company_fin_ent.update_by = sys_user.user_id
+        <where>  
+        tb_company_fin_ent.del_flag  = '0'
+		  		  <if test="id != null and id != ''"> and tb_company_fin_ent.id = #{id} </if>
+		  		  <if test="finName != null and finName != ''"> and tb_company_fin_ent.fin_name = #{finName} </if>
+		  		  <if test="sort != null and sort != ''"> and tb_company_fin_ent.sort = #{sort} </if>
+		  		  <if test="createDate != null and createDate != ''"> and tb_company_fin_ent.create_date = #{createDate} </if>
+		  		  <if test="createBy != null and createBy != ''"> and tb_company_fin_ent.create_by = #{createBy} </if>
+		  		  <if test="updateDate != null and updateDate != ''"> and tb_company_fin_ent.update_date = #{updateDate} </if>
+		  		  <if test="updateBy != null and updateBy != ''"> and tb_company_fin_ent.update_by = #{updateBy} </if>
+		  		</where>
+      	 order by tb_company_fin_ent.sort,tb_company_fin_ent.update_date desc
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from tb_company_fin_ent
+		 <where>  
+		 	del_flag  = '0'
+		  		  <if test="id != null and id != ''"> and ID = #{id} </if>
+		  		  <if test="finName != null and finName != ''"> and fin_name = #{finName} </if>
+		  		  <if test="sort != null and sort != ''"> and sort = #{sort} </if>
+		  		  <if test="createDate != null and createDate != ''"> and create_date = #{createDate} </if>
+		  		  <if test="createBy != null and createBy != ''"> and create_by = #{createBy} </if>
+		  		  <if test="updateDate != null and updateDate != ''"> and update_date = #{updateDate} </if>
+		  		  <if test="updateBy != null and updateBy != ''"> and update_by = #{updateBy} </if>
+		  		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.winchampion.credit.business.domain.CompanyFinEntDO">
+		insert into tb_company_fin_ent
+		(
+			`ID`, 
+			`fin_name`, 
+			`sort`, 
+			`create_date`, 
+			`create_by`, 
+			`update_date`, 
+			`update_by`, 
+			`del_flag`
+		)
+		values
+		(
+			#{id}, 
+			#{finName}, 
+			#{sort}, 
+			#{createDate}, 
+			#{createBy}, 
+			#{updateDate}, 
+			#{updateBy}, 
+			#{delFlag}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.winchampion.credit.business.domain.CompanyFinEntDO">
+		update tb_company_fin_ent 
+		<set>
+			<if test="finName != null">`fin_name` = #{finName}, </if>
+			<if test="sort != null">`sort` = #{sort}, </if>
+			<if test="createDate != null">`create_date` = #{createDate}, </if>
+			<if test="createBy != null">`create_by` = #{createBy}, </if>
+			<if test="updateDate != null">`update_date` = #{updateDate}, </if>
+			<if test="updateBy != null">`update_by` = #{updateBy}, </if>
+			<if test="delFlag != null">`del_flag` = #{delFlag}</if>
+		</set>
+		where ID = #{id}
+	</update>
+	
+	<delete id="remove">
+		delete from tb_company_fin_ent where ID = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from tb_company_fin_ent where ID in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

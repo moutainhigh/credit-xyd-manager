@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.winchampion.credit.business.dao.CompanyFinanceNeedsDao">
+	
+	<sql id = "selectId">
+	  SELECT
+			tb_company_finance_needs.customer_id,
+			tb_company_finance_needs.id,
+			tb_company_finance_needs.needs_no,
+			tb_company_finance_needs.needs_amount,
+			tb_company_finance_needs.needs_term,
+			tb_company_finance_needs.guarantee_mode,
+			tb_company_finance_needs.pub_fin_ins,
+			tb_company_finance_needs.established_time,
+			tb_company_finance_needs.has_collateral,
+			tb_company_finance_needs.last_sales_scale,
+			tb_company_finance_needs.address_area,
+			tb_company_finance_needs.cname,
+			tb_company_finance_needs.release_date,
+			tb_company_finance_needs.create_date,
+			tb_company_finance_needs.accept_status,
+			tb_company_finance_needs.accept_remarks,
+			tb_company_finance_needs.accept_date,
+			tb_company_finance_needs.accept_by,
+			tb_customer.customer_name as 'customerDO.customer_name',
+			tb_customer.id as 'customerDO.id',
+			tb_customer.customer_phone as 'customerDO.customer_phone',
+			sys_user.name as 'userDo.name',
+			tb_company_finance_needs.company_info
+		FROM
+			tb_company_finance_needs
+		inner JOIN
+			tb_customer on tb_company_finance_needs.customer_id = tb_customer.ID
+		left JOIN 
+			sys_user on tb_company_finance_needs.accept_by = sys_user.user_id
+	</sql>
+	
+	<select id="get" resultType="com.winchampion.credit.business.domain.CompanyFinanceNeedsDO">
+		<include refid = "selectId" />
+		 where tb_company_finance_needs.ID = #{value}
+	</select>
+
+	<select id="list" resultType="com.winchampion.credit.business.domain.CompanyFinanceNeedsDO">
+		<!-- select `customer_id`,`ID`,`needs_no`,`needs_amount`,`needs_term`,`Guarantee_mode`,`pub_fin_ins`,`Established_time`,`has_collateral`,`last_sales_scale`,`address_area`,`cname`,`release_date`,`create_date`,`accept_status`,`accept_remarks`,`accept_date`,`accept_by` from tb_company_finance_needs -->
+       <include refid = "selectId" />
+        <where>  
+		  		  <if test="id != null and id != ''"> and tb_company_finance_needs.ID = #{id} </if>
+		  		  <if test="acceptStatus != null and acceptStatus != ''"> and tb_company_finance_needs.accept_status = #{acceptStatus} </if>
+		  		  <if test="companyInfo != null and companyInfo != ''"> and tb_company_finance_needs.company_info like CONCAT('%', #{companyInfo}, '%') </if>
+		  		  <if test="customerPhone != null and customerPhone != ''"> and tb_customer.customer_phone like CONCAT('%', #{customerPhone}, '%') </if>
+		  		</where>
+         order by release_date desc
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from tb_company_finance_needs
+		inner JOIN
+			tb_customer on tb_company_finance_needs.customer_id = tb_customer.ID
+		left JOIN 
+			sys_user on tb_company_finance_needs.accept_by = sys_user.user_id
+		 <where>  
+		  		  <if test="id != null and id != ''"> and tb_company_finance_needs.ID = #{id} </if>
+		  		  <if test="acceptStatus != null and acceptStatus != ''"> and tb_company_finance_needs.accept_status = #{acceptStatus} </if>
+		  		  <if test="companyInfo != null and companyInfo != ''"> and tb_company_finance_needs.company_info like CONCAT('%', #{companyInfo}, '%') </if>
+		  		  <if test="customerPhone != null and customerPhone != ''"> and tb_customer.customer_phone like CONCAT('%', #{customerPhone}, '%') </if>
+		  </where>
+	</select>
+	 
+	<insert id="save" parameterType="com.winchampion.credit.business.domain.CompanyFinanceNeedsDO">
+		insert into tb_company_finance_needs
+		(
+			`customer_id`, 
+			`ID`, 
+			`needs_no`, 
+			`needs_amount`, 
+			`needs_term`, 
+			`Guarantee_mode`, 
+			`pub_fin_ins`, 
+			`Established_time`, 
+			`has_collateral`, 
+			`last_sales_scale`, 
+			`address_area`, 
+			`cname`, 
+			`release_date`, 
+			`create_date`, 
+			`accept_status`, 
+			`accept_remarks`, 
+			`accept_date`, 
+			`accept_by`
+		)
+		values
+		(
+			#{customerId}, 
+			#{id}, 
+			#{needsNo}, 
+			#{needsAmount}, 
+			#{needsTerm}, 
+			#{guaranteeMode}, 
+			#{pubFinIns}, 
+			#{establishedTime}, 
+			#{hasCollateral}, 
+			#{lastSalesScale}, 
+			#{addressArea}, 
+			#{cname}, 
+			#{releaseDate}, 
+			#{createDate}, 
+			#{acceptStatus}, 
+			#{acceptRemarks}, 
+			#{acceptDate}, 
+			#{acceptBy}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.winchampion.credit.business.domain.CompanyFinanceNeedsDO">
+		update tb_company_finance_needs 
+		<set>
+			<if test="acceptStatus != null">`accept_status` = #{acceptStatus}, </if>
+			<if test="acceptRemarks != null">`accept_remarks` = #{acceptRemarks}, </if>
+			<if test="acceptDate != null">`accept_date` = #{acceptDate}, </if>
+			<if test="acceptBy != null">`accept_by` = #{acceptBy}</if>
+		</set>
+		where ID = #{id}
+	</update>
+	
+	<delete id="remove">
+		delete from tb_company_finance_needs where ID = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from tb_company_finance_needs where ID in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+	<select id="listByCustomerId" resultType="com.winchampion.credit.business.domain.CompanyFinanceNeedsDO">
+		<include refid = "selectId" />
+		<where>
+			tb_company_finance_needs.customer_id = #{customerId}
+		</where>
+		order by release_date desc
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+
+	<select id="countByCustomerId" resultType="int">
+		select count(*) from tb_company_finance_needs
+		inner JOIN tb_customer on tb_company_finance_needs.customer_id = tb_customer.ID
+		left JOIN sys_user on tb_company_finance_needs.accept_by = sys_user.user_id
+		<where>
+			tb_company_finance_needs.customer_id = #{customerId}
+		</where>
+	</select>
+</mapper>

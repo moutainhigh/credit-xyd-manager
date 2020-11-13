@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+<!-- <head th:include="include :: header"></head> -->
+<link rel="icon" href="../favicon.ico">
+<!-- <link href="/css/product/bootstrap.min.css" rel="stylesheet"> -->
+<link href="/css/product/front.css" rel="stylesheet">
+<link href="/css/product/index.css" rel="stylesheet">
+<style type="text/css">
+.mpmd_small {
+    width: 25px;
+    height: 40px;
+    left: 0;
+    top: 0;
+    position: absolute;
+    background: url("/img/icon_mpmd2.png") no-repeat;
+}
+.confirm{
+    border: 1px solid;
+    width: 120px;
+    height: 30px;
+    }
+.result_info{
+    width: 1140px;
+    padding: 30px 0;
+    margin: 0 auto;
+    border-bottom: 1px solid rgba(216, 216, 216, 0.5);
+    }
+</style>
+<body class="gray-bg" style="padding-left:50px;"><br/>
+  <!-- 发布事件 -->
+  <div class="issue_div" id="issueB"  th:if="${ifIssue eq 'true' && product.isRelease!='1'}">
+    <input id="productNo" name="productNo" th:value="${product.productNo}" type="hidden">
+    <input id="productId" name="productId" th:value="${product.id}" type="hidden">
+  	<h4>您当前正在发布产品，确认以下样式无误后，点击确认发布即可发布&nbsp;&nbsp;&nbsp;&nbsp;
+  		<button type="button" class="btn confirm"
+  			th:onclick="issue()">确认发布</button>&nbsp;&nbsp;&nbsp;&nbsp;
+  		<button type="button" class="btn confirm" onclick="window.close();">返回</button>
+  	</h4>
+  </div>
+  <button type="button" id="closeBtu" class="btn confirm" th:if="${ifIssue eq 'false' || product.isRelease=='1'}" onclick="window.close();">返回</button>
+  <br/><br/>
+  <!-- 样式1 -->
+  <h3><b>样式1</b></h3>
+
+   <div class="result_info" style="background-color: white;">
+   		<img th:src="${product.file}" alt="weicheng" style="float: left;margin: 20px 20px;width: 182px;height: 48px;"/>
+   		 <div class="result_detail" style="float: left;margin: 0 20px;width: 720px;">
+   		 	<p style="margin: 0 0 10px;">
+   		 		 <span class="name" style="font-size: 24px;margin: 10px 15px 10px 0;font-family: "SourceHanSans-Regular", Arial, serif;">[[${product.insName}]]-[[${product.productName}]]</span>
+   		 		 <span class="tag2" style="position: relative;top: -5px;">[[${product.keywordOne}]]</span>
+   		 		 <span class="tag2" style="position: relative;top: -5px;" th:if="${product.keywordTwo!=null&&product.keywordTwo!=''}">[[${product.keywordTwo}]]</span>
+   		 		 <span class="tag2" style="position: relative;top: -5px;" th:if="${product.keywordThree!=null&&product.keywordThree!=''}">[[${product.keywordThree}]]</span>
+   		 	</p>
+   		 	<p style="margin: 0 0 10px;font-size: 14px;line-height: 1.42857143;color: #333;">[[${product.productInfo}]]</p>
+   		 </div>
+   		 <div class="result_btn" style="width: 180px;float: left;margin: 20px -11px;">
+   		 	<button class="btn btn-default detail_btn">查看详情</button>
+   		 </div>
+   		 <div class="clr"></div>
+   </div>
+	<br/><br/>
+	
+	 <h3><b>样式2</b></h3>
+	<div class="content">
+	    <div class="content_left">
+	        <div class="base_plane">
+	            <div class="base_title2">
+	                <img id="institutionFile" class="left" alt="logo_weicheng"  th:src="${product.file}"/>
+	                <span id="names" class="name2">[[${product.insName}]]-[[${product.productName}]]</span>
+	                <span class="tags">
+	                    <span id="keywordOne" class="tag2">[[${product.keywordOne}]]</span>
+	                    <span id="keywordTwo" class="tag2" th:if="${product.keywordTwo!=null&&product.keywordTwo!=''}">[[${product.keywordTwo}]]</span>
+	                    <span id="keywordThree" class="tag2" th:if="${product.keywordThree!=null&&product.keywordThree!=''}">[[${product.keywordThree}]]</span>
+	                </span>
+	            </div>
+	            <div class="clr"></div>
+	        </div>
+	        <div class="detail_plane">
+	          	<div class="detail_plane_left" style="height: 400px">
+	          	</div>
+	          <div th:each="info: ${infoList}">
+	            <div class="detail_plane_right" >
+	            	<div class="detail_title">
+	            		<span>[[${info.creditProductTitle}]]<div class="title_line1"></div></span>
+	            	</div>
+	            	<div class="detail_info"  th:utext="${info.creditProductInfo}"></div>
+	            </div>
+	          </div>
+	            <div class="clr"></div>
+	        </div>
+	    </div>
+	    <div class="clr"></div>
+	</div>
+	
+  
+   
+    <div class="clr"></div>
+    <script type="text/javascript" src="/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/js/appjs/business/product/creditProductDetails.js"></script>
+</div>
+</body>
+</html>

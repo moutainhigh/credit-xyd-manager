@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<style type="text/css">
+ .must-hint{
+ 	color:red;
+ }
+</style>
+<body class="gray-bg">
+  <div style="padding-left: 20px;">
+  	<input id="productNo" name="productNo" th:value="${product.productNo}" type="hidden">
+	<input id="productId" name="productId" th:value="${product.id}" type="hidden">
+		<div style="float:right">
+			 <input class="btn btn-primary" type="button" value="样式预览" onclick="productPreview()"/>&nbsp;&nbsp;
+			<input class="btn btn-primary" type="button" value="编辑" onclick="editProduct()"/>&nbsp;&nbsp;
+			<input class="btn btn-primary" type="button" value="返回" onclick="goBack()"/>		
+		</div>
+		<div style="clear:both"></div>
+	<!--产品信息  -->
+	<h4 class="contentTitle">产品信息</h4>
+	<table class="table table-bordered table-condensed table-product">
+		<tbody>
+			<tr>
+				<th width="18%">产品名称&nbsp;&nbsp;<b class="must-hint">*</b></th>
+				<td width="32%">[[${product.productName}]]</td>
+				<th width="18%">产品编号&nbsp;&nbsp;<b class="must-hint">*</b></th>
+				<td width="32%">[[${product.productNo}]]</td>
+			</tr>
+		</tbody>
+	</table>
+	<!-- 所属信用机构 -->
+	<h4 class="contentTitle">所属信用机构</h4>
+	<table class="table table-bordered table-condensed table-product">
+		<tbody>
+			<tr>
+				<th width="18%">>所属信用机构&nbsp;&nbsp;<b class="must-hint">*</b></th>
+				<td width="32%">[[${product.insName}]]</td>
+				<th></th>
+				<td></td>
+			</tr>
+			<tr>
+				<th width="18%">机构LOGO&nbsp;&nbsp;<b class="must-hint">*</b></th>
+				<td width="32%"><img th:src="${product.file}"/></td>
+				<th></th>
+				<td></td>
+			</tr>
+		</tbody>
+	</table>
+	
+	<!-- 产品概述 -->
+	<h4 class="contentTitle">产品概述</h4>
+	<table class="table table-bordered table-condensed table-product">
+		<tbody>
+			 <tr>
+						<th width="18%">产品概述&nbsp;&nbsp;<b class="must-hint">*</b></th>
+						<td width="80%">
+							<textarea id="productInfo" name="productInfo" style="width: 700px;"
+										type="text" disabled>[[${product.productInfo}]]</textarea>
+						</td>
+			</tr>
+		</tbody>
+	</table>
+	
+	<!-- 产品亮点关键词 -->
+	<h4 class="contentTitle">产品亮点关键词</h4>
+	<table class="table table-bordered table-condensed table-product">
+		<tbody>
+			<tr>
+				<th width="18%">亮点关键词1&nbsp;&nbsp;<b class="must-hint">*</b></th>
+				<td width="32%"><input id="keywordOne" name="keywordOne" th:value="${product.keywordOne}"
+										type="text" disabled></td>
+				<th width="18%">亮点关键词2</th>
+				<td width="32%"><input id="keywordTwo" name="keywordTwo" th:value="${product.keywordTwo}"
+										type="text" disabled></td>
+			</tr>
+			<tr>
+				<th width="18%">亮点关键词3</th>
+				<td width="32%"><input id="keywordThree" name="keywordThree" th:value="${product.keywordThree}"
+										type="text" disabled></td>
+				<th></th>
+				<td></td>
+			</tr>
+		</tbody>
+	</table>
+	
+	<!-- 产品所属板块 -->
+	<h4 class="contentTitle">产品所属板块</h4>
+	<table class="table table-bordered table-condensed table-product">
+		<tbody>
+			 <tr>
+						<th width="18%">产品所属板块&nbsp;&nbsp;<b class="must-hint">*</b></th>
+						<td width="80%">
+							<!-- <input name="sector" type="radio" th:each="p:${palteList}" th:value="${p.value}" th:text="${p.name}"
+								 th:field="*{product.sector}" disabled="disabled"/> -->
+								 <input name="sector" type="checkbox" th:each="p:${palteList}" th:value="${p.value}" th:text="${p.name}"
+							  th:if="${#strings.containsIgnoreCase(product.sector,p.value)}" checked="checked" disabled="disabled"/>
+							<input name="sector" type="checkbox" th:each="p:${palteList}" th:value="${p.value}" th:text="${p.name}"
+							  th:if="${!#strings.containsIgnoreCase(product.sector,p.value)}" disabled="disabled"/>
+						</td>
+			</tr>
+		</tbody>
+	</table>
+	
+	
+	<!-- 产品详情介绍-->
+	<h4 class="contentTitle">产品详情介绍</h4>
+	
+	<div class="showDetail" th:each="info: ${infoList}">
+			<p>
+				<span>标题</span>
+				<input id="creditProductTitle" name="creditProductTitle" th:value="${info.creditProductTitle}"
+										type="text" disabled>
+			</p>
+			<div class="detailMain" th:utext="${info.creditProductInfo}"></div>
+	</div>
+	
+	<!-- 产品变更记录 -->
+	<h4 class="contentTitle">产品变更记录</h4>
+	<table id="operateLogTable" data-mobile-responsive="true">
+	</table>
+	
+	<!-- 基础日志-->
+	<h4 class="contentTitle">基础日志</h4>
+	<table class="table table-bordered table-condensed table-product">
+		<tbody>
+			<tr>
+				<th width="18%">创建时间</th>
+				<td width="32%" th:text="${#dates.format(product.createDate, 'yyyy-MM-dd HH:mm')}"></td>
+				<th width="18%">创建人</th>
+				<td width="32%" th:text="${product.createName}"></td>
+			</tr>
+			<tr>
+				<th>最后更新时间</th>
+				<td th:text="${#dates.format(product.updateDate, 'yyyy-MM-dd HH:mm')}"></td>
+				<th>最后更新人</th>
+				<td th:text="${product.createName}"></td>
+			</tr>
+		</tbody>
+	</table>
+	<div style="text-align:center;">	
+		<input class="btn btn-primary" type="button" value="样式预览" onclick="productPreview()"/>&nbsp;&nbsp;
+		<input class="btn btn-primary" type="button" value="编辑" onclick="editProduct()"/>&nbsp;&nbsp;
+		<input class="btn btn-primary" type="button" value="返回" onclick="goBack()"/>					
+	</div>
+  
+  </div>
+  
+	<div th:include="include::footer"></div>
+	<script type="text/javascript" src="/js/appjs/business/product/creditProductDetails.js"></script>
+	<script type="text/javascript">
+	   $(function(){
+		   var productNo = '[[${product.productNo}]]';
+		   load(productNo);
+	   });
+	   
+	   function editProduct(){
+		   var id = '[[${product.id}]]';
+		   window.location.href= "/business/creditProduct/details/"+id+"/2"; 
+	}
+	   function productPreview(){
+		   var id = '[[${product.id}]]';
+		   var tempwindow=window.open('_blank');
+  		   tempwindow.location= "/business/creditProduct/details/"+id+"/3";
+	   }
+	</script>
+</body>
+</html>

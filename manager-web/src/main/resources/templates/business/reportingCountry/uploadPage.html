@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<!-- 上传图片所用的css -->
+<link href="/css/layui.css" rel="stylesheet">
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+                    <form class="form-horizontal m-t" id="uploadForm">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">请选择要上传的文件：</label>
+                            <div class="col-sm-8">
+                                <button type="button" class="layui-btn" id="finFiles">
+                                    <i class="fa fa-cloud"></i>上传文件
+                                </button>
+                                <!--<input id="finFile" name="filePath" class="form-control" type="hidden" value="" />-->
+                                <input id="filePath" name="filePath" class="form-control" type="hidden" value=""/>
+                                <input id="version" name="version" class="form-control" type="hidden" value=""/>
+
+                                <div>
+                                    <img alt="" src="" id="baseFile">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-8 col-sm-offset-3">
+                                <!--<button type="submit" class="btn btn-primary">保存</button>-->
+                                <a class="btn btn-primary" onclick="submitUpload()">保存</a>
+                                <a class="btn btn-primary" onclick="closePage()">取消</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:include="include::footer"></div>
+<!--<script type="text/javascript" src="/js/appjs/business/reportingCountry/uploadPage.js?v=20201031001">
+</script>-->
+<!-- 全局js -->
+<!-- 上传图片所用的js -->
+<script src="/js/layui.js"></script>
+<script src="/js/plugins/clipboard/clipboard.min.js"></script>
+<script src="/js/vue.min.js"></script>
+<script type="text/javascript">
+    layui.use('upload', function () {
+        var upload = layui.upload;
+        //执行实例
+        var uploadInst = upload.render({
+            elem: '#finFiles', //绑定元素
+            url: '/business/reporting/upload', //上传接口
+            size: 1000,
+            accept: 'file',
+            done: function (r) {
+                layer.msg(r.msg);
+                //$("#baseFile").attr("src", r.base64 );
+                $("#filePath").val(r.filePath);
+                $("#version").val(r.version);
+            },
+            error: function (r) {
+                layer.msg(r.msg);
+            }
+        });
+    });
+
+    function closePage() {
+        var index = parent.layer.getFrameIndex(window.name);
+        parent.layer.close(index);
+    }
+
+    /**
+     * 从指定的路径下面读取文件
+     */
+    function submitUpload() {
+        //判断是否已经选择了文件
+        var selectFile = $("#filePath").val();
+        if (selectFile == null || selectFile == '') {
+            layer.alert("请先选择文件！");
+            return;
+        }
+        layer.confirm('是否确认上传文件并上报', {
+            btn: ['是', '取消']
+        }, function () {
+            $.ajax({
+                url: "/business/reporting/uploadExcel",
+                type: "post",
+                data: $('#uploadForm').serialize(),// 你的formid
+                success: function (r) {
+                    var increAndQuanMsg = r.increAndQuan;
+                    var indexResult = r.indexResult;
+                    if (increAndQuanMsg.success == true && indexResult.success == true) {
+                        layer.msg(increAndQuanMsg.errorMessage);
+                        var index = parent.layer.getFrameIndex(window.name);
+                        parent.layer.close(index);
+                    } else {
+                        //layer.msg(r.msg);
+
+                        if (increAndQuanMsg.success == false) {
+                            layer.msg(increAndQuanMsg.errorMessage);
+                        }
+                        if (indexResult.success == false) {
+                            layer.msg(increAndQuanMsg.errorMessage);
+                        }
+
+                    }
+                }
+            });
+        })
+    }
+</script>
+</body>
+</html>

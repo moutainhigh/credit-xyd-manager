@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="gray-bg">
+
+	<div class="wrapper wrapper-content ">
+		<div class="col-sm-12">
+			<div class="ibox">
+				<div class="ibox-body">
+					<div class="fixed-table-toolbar">
+							<!-- <input id="applyForSource" type="hidden" value="1" class="form-control"> -->
+							<div class="columns pull-right col-md-2 nopadding">
+								<input id="applyOdd" type="text" class="form-control"
+									placeholder="申请单号">
+							</div>
+							<div class="columns pull-right col-md-2 nopadding">
+								<input id="productName" type="text" class="form-control"
+									placeholder="产品名称" >
+							</div>
+							<div class="columns pull-right col-md-2 nopadding">
+								<input id="organizationName" type="text" class="form-control"
+									placeholder="金融机构" >
+							</div>
+							<div class="columns pull-right col-md-2 nopadding">
+								<input id="name" type="text" class="form-control"
+									placeholder="姓名" >
+							</div>
+							<div class="columns pull-right col-md-2 nopadding">
+								<input id="mobilePhone" type="text" class="form-control"
+									placeholder="手机号" >
+							</div>
+							
+							<div class="columns pull-right">
+								<button class="btn btn-success" onclick="reLoad()">查询</button>
+							</div>
+						</div>
+					<table id="productApplyLogListTable" data-mobile-responsive="true">
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--shiro控制bootstraptable行内按钮看见性 来自bootdo的创新方案 -->
+		<div>
+			<script type="text/javascript">
+				var s_edit_h = 'hidden';
+				var s_remove_h = 'hidden';
+			</script>
+		</div>
+		<div>
+			<script type="text/javascript">
+				s_edit_h = '';
+			</script>
+		</div>
+		<div>
+			<script type="text/javascript">
+				var s_remove_h = '';
+			</script>
+		</div>
+	</div>
+	<div th:include="include :: footer"></div>
+	<script type="text/javascript" src="/js/appjs/business/productApplyLog/sinosureFinancingList.js"></script>
+</body>
+</html>
